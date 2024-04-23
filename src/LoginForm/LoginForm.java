@@ -116,33 +116,28 @@ public class LoginForm extends JFrame {
         JOptionPane.showMessageDialog(LoginForm.this, "Password reset functionality will be implemented here!");
     }
 
-    private boolean authenticateUser(String username, String password) {
-        String url = "jdbc:mysql://localhost:3306/your_event";
-        String user = "root";
-        String dbPassword = "";
+   private boolean authenticateUser(String username, String password) {
+    String url = "jdbc:mysql://localhost:3306/your_event";
+    String user = "root";
+    String dbPassword = "";
 
-        try (Connection conn = DriverManager.getConnection(url, user, dbPassword)) {
-            String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, username);
-                // Utilisation de hachage pour sécuriser le mot de passe
-                String hashedPassword = hashPassword(password);
-                statement.setString(2, hashedPassword);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next(); // true si l'utilisateur existe
-                }
+    try (Connection conn = DriverManager.getConnection(url, user, dbPassword)) {
+        String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, username);
+            statement.setString(2, password); // Ne pas hacher le mot de passe
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next(); // true si l'utilisateur existe
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
         }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return false;
     }
+}
 
-    // Méthode pour hacher le mot de passe
-    private String hashPassword(String password) {
-        // Implémentation de l'algorithme de hachage sécurisé (par exemple, SHA-256)
-        return password; // À remplacer par le vrai hachage
-    }
+
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new LoginForm());

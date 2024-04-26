@@ -12,7 +12,8 @@ public class ResetPasswordForm extends JFrame {
     private JPasswordField confirmPasswordField;
     private JTextField emailField;
     private JButton resetButton;
-
+   private JButton backButton;
+   
     public ResetPasswordForm() {
         super("Reset Password");
         setForeground(new Color(0, 0, 0));
@@ -27,7 +28,10 @@ public class ResetPasswordForm extends JFrame {
         resetButton = new JButton("Reset Password");
         resetButton.setForeground(new Color(0, 0, 51));
         resetButton.setFont(new Font("Tahoma", Font.BOLD, 16));
-
+        backButton = new JButton("Back");
+        backButton.setForeground(new Color(0, 0, 51));
+        backButton.setFont(new Font("Tahoma", Font.BOLD, 16));
+         
         // Style personnalisé pour le formulaire de réinitialisation de mot de passe
         getContentPane().setLayout(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -57,12 +61,17 @@ public class ResetPasswordForm extends JFrame {
         getContentPane().add(pass);
         getContentPane().add(confirmPass);
         getContentPane().add(email);
+        getContentPane().add(backButton); 
+        
         usernameField.setBounds(55, 126, 361, 40);
         passwordField.setBounds(55, 201, 361, 40);
         confirmPasswordField.setBounds(55, 292, 361, 40);
-        emailField.setBounds(55, 384, 361, 40);
-        resetButton.setBounds(100, 460, 250, 29);
+        emailField.setBounds(56, 372, 361, 40);
+        resetButton.setBounds(113, 435, 250, 29);
         resetButton.setBackground(new Color(255, 255, 255));
+        backButton.setBounds(113, 476, 250, 29);
+        backButton.setBackground(new Color(255, 255, 255));
+
 
         getContentPane().add(usernameField);
         getContentPane().add(passwordField);
@@ -97,7 +106,19 @@ public class ResetPasswordForm extends JFrame {
                 resetPassword(username, newPassword);
             }
         });
-
+        
+               // Ajout d'un écouteur d'événements au bouton de retour en arrière
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Close the current form
+                // Open the login form or navigate back to the login screen as needed
+                // For example:
+                LoginForm loginForm = new LoginForm();
+                loginForm.setVisible(true);
+            }
+        });
+        
         // Configuration de la fenêtre
         setSize(493, 553);
         setLocationRelativeTo(null);

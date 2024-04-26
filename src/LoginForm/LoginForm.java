@@ -70,7 +70,8 @@ public class LoginForm extends JFrame {
 
                 // Validation des informations d'identification
                 if (authenticateUser(username, password)) {
-                    JOptionPane.showMessageDialog(LoginForm.this, "Login successful!");
+                    dispose(); // Fermez la fenêtre de connexion
+                    new Dashboard();
                     // Redirection après authentification réussie
                     // Vous pouvez rediriger l'utilisateur vers la page principale de l'application
                     // ou ouvrir une nouvelle fenêtre
@@ -99,6 +100,7 @@ public class LoginForm extends JFrame {
         forgotPasswordLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+            	dispose();
                 // Ouvre la page de réinitialisation de mot de passe lorsque le label est cliqué
                 new ResetPasswordForm();
             }
@@ -116,30 +118,34 @@ public class LoginForm extends JFrame {
         JOptionPane.showMessageDialog(LoginForm.this, "Password reset functionality will be implemented here!");
     }
 
-   private boolean authenticateUser(String username, String password) {
-    String url = "jdbc:mysql://localhost:3306/your_event";
-    String user = "root";
-    String dbPassword = "";
+    private boolean authenticateUser(String username, String password) {
+        String url = "jdbc:mysql://localhost:3306/your_event";
+        String user = "root";
+        String dbPassword = "";
 
-    try (Connection conn = DriverManager.getConnection(url, user, dbPassword)) {
-        String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, username);
-            statement.setString(2, password); // Ne pas hacher le mot de passe
-            try (ResultSet resultSet = statement.executeQuery()) {
-                return resultSet.next(); // true si l'utilisateur existe
+        try (Connection conn = DriverManager.getConnection(url, user, dbPassword)) {
+            String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, username);
+                statement.setString(2, password); // Ne pas hacher le mot de passe
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSet.next(); // true si l'utilisateur existe
+                }
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        return false;
     }
-}
 
 
     
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginForm());
-    }
+    	 SwingUtilities.invokeLater(new Runnable() {
+             public void run() {
+                 new LoginForm();
+             }
+         });
+}
 }

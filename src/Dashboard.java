@@ -23,13 +23,42 @@ public class Dashboard extends JFrame {
     private JTextField searchField; // Declare searchField at the class level
     private JTable table; // Declare table at the class level
     private DefaultTableModel tableModel;
+    private Tickets ticketsPanel; // Define an instance of Tickets
+    private Participant ParticipantContentPanel; // Define an instance of Tickets
+    private Invite inviteContentPanel; // Define an instance of Tickets
+
+ 
+    private void switchToTicketsContent() {
+        mainPanel.removeAll(); // Remove any existing components from the main panel
+        mainPanel.add(ticketsPanel); // Add the tickets panel to the main panel
+        mainPanel.revalidate(); // Revalidate the main panel to reflect the changes
+        mainPanel.repaint(); // Repaint the main panel
+    }
+    // Method to switch to help content
+    private void switchToParticipantContent() {
+        mainPanel.removeAll(); // Remove any existing components from the main panel
+        mainPanel.add(ParticipantContentPanel); // Add the help content panel to the main panel
+        mainPanel.revalidate(); // Revalidate the main panel to reflect the changes
+        mainPanel.repaint(); // Repaint the main panel
+    }
+ // Method to switch to invite content
+    private void switchToInviteContent() {
+        mainPanel.removeAll(); // Remove any existing components from the main panel
+        mainPanel.add(inviteContentPanel); // Add the invite content panel to the main panel
+        mainPanel.revalidate(); // Revalidate the main panel to reflect the changes
+        mainPanel.repaint(); // Repaint the main panel
+    }
 
     public Dashboard() {
         setTitle("YourEvent");
-        setSize(1000, 600);
+        setSize(1100, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         // Création du panneau latéral (sidebar)
+        
+   
+    
+    
         sidebarPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -53,10 +82,10 @@ public class Dashboard extends JFrame {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Create buttons with transparent background
-        dashboardButton = createButton("Evénements", new Color(0, 102, 51)); // Green color
-        settingsButton = createButton("Billets", new Color(60, 165, 92)); // Light green color
-        helpButton = createButton("Participants", new Color(0, 102, 51)); // Green color
-        invitebutton=createButton("Invités", new Color(0, 102, 51)); // Green color
+        dashboardButton = createButton("EVENTS", new Color(0, 102, 51)); // Green color
+        settingsButton = createButton("TICKETS", new Color(60, 165, 92)); // Light green color
+        helpButton = createButton("PARTICIPANTS", new Color(0, 102, 51)); // Green color
+        invitebutton=createButton("GUESTS", new Color(0, 102, 51)); // Green color
         dashboardButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\evenement.png"));
         settingsButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\billets-davion.png"));
         helpButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\participation.png"));
@@ -70,20 +99,60 @@ public class Dashboard extends JFrame {
         logoutButton.setBorderPainted(false);
         logoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+     // Add buttons with equal margins using EmptyBorder
+        dashboardButton.setBorder(BorderFactory.createEmptyBorder(10,10, 10, 10));
+        settingsButton.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        helpButton.setBorder(BorderFactory.createEmptyBorder(10,45, 10, 10));
+        invitebutton.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        
+     // Create an instance of Tickets
+        ticketsPanel = new Tickets();
+        // Add action listener to the "Tickets" button
+        settingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Switch to the tickets content when the button is clicked
+                switchToTicketsContent();
+            }
+        });
+        ParticipantContentPanel = new Participant();
+        inviteContentPanel= new Invite();
+        // Add action listener to the "Tickets" button
+        settingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Switch to the tickets content when the button is clicked
+                switchToParticipantContent();
+            }
+        });
+       
+        // Add action listeners for buttons
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchToParticipantContent();
+            }
+        });
+        invitebutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchToInviteContent();
+            }
+        });
         sidebarPanel.add(titleLabel);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between title and buttons
         sidebarPanel.add(dashboardButton);
-        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 30))); // Add space between buttons
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between buttons
         sidebarPanel.add(settingsButton);
-        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 30))); // Add space between buttons
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between buttons
         sidebarPanel.add(helpButton);
-        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 30))); // Add space between buttons
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between buttons
         sidebarPanel.add(invitebutton);
         sidebarPanel.add(Box.createVerticalGlue());
         sidebarPanel.add(logoutButton); // Add logout button at the bottom
 
         // Set preferred size of the sidebarPanel
-        sidebarPanel.setPreferredSize(new Dimension(200, sidebarPanel.getPreferredSize().height));
+        sidebarPanel.setPreferredSize(new Dimension(250, sidebarPanel.getPreferredSize().height));
 
         getContentPane().add(sidebarPanel, BorderLayout.WEST);
 
@@ -93,7 +162,7 @@ public class Dashboard extends JFrame {
         getContentPane().add(mainPanel, BorderLayout.CENTER);
 
         // Add title "Événements" to the main panel
-        JLabel titleLabelEvents = new JLabel("Événements", JLabel.CENTER);
+        JLabel titleLabelEvents = new JLabel("EVENTS ", JLabel.CENTER);
         titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabelEvents.setForeground(new Color(60, 165, 92)); // Green color
         mainPanel.add(titleLabelEvents);
@@ -104,7 +173,7 @@ public class Dashboard extends JFrame {
         searchPanel.setBackground(new Color(235, 235, 235)); // Set background color
 
      // Create the search field with placeholder text
-        searchField = new PlaceholderTextField("Rechercher un évenement");
+        searchField = new PlaceholderTextField("Search for an event");
 
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(200, 40));
@@ -137,7 +206,7 @@ public class Dashboard extends JFrame {
         
      // Create "Add Event" button with icon
         ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\lenovo\\\\Downloads\\\\plus.png"); // Change "path_to_your_icon_file.png" to the actual path of your icon file
-        JButton addButton = new JButton("Ajouter un évenement", plusIcon);
+        JButton addButton = new JButton("Add an event", plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
         addButton.setForeground(new Color(235, 219, 204)); // Set foreground color
@@ -161,10 +230,17 @@ public class Dashboard extends JFrame {
 
    
 
-      
+       
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	dispose();
+            	new LoginForm(); // Appel de la méthode logout() lorsque le bouton est cliqué
+            }
+        });
         
         
-        String[] columns = { "Events ID", "Title", "Description", "Date", "Location", "Type", "Status", "Price", "Capacity", "Supprimer" };
+        String[] columns = { "Events ID", "Title", "Description", "Date", "Location", "Type", "Status", "Price", "Capacity" };
 
 
         // Récupération des données depuis la base de données
@@ -172,9 +248,7 @@ public class Dashboard extends JFrame {
         table = new JTable(data, columns);
         this.tableModel = new DefaultTableModel(data, columns);
         this.table = new JTable(this.tableModel);
-     // Ajouter la nouvelle colonne "Supprimer" avec des boutons "Supprimer"
-        table.getColumn("Supprimer").setCellRenderer(new DeleteButtonRenderer());
-        table.getColumn("Supprimer").setCellEditor(new DeleteButtonEditor(new JCheckBox()));
+     
 
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -186,8 +260,281 @@ public class Dashboard extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(table);
         mainPanel.add(scrollPane);
+     // Create a "Modify" button
+        JButton modifyButton = new JButton("Modify Selected");
+        modifyButton.setPreferredSize(new Dimension(150, 30));
+        modifyButton.setBackground(new Color(60, 165, 92)); // Green background
+        modifyButton.setForeground(new Color(235, 219, 204)); // White text
+        modifyButton.setFocusPainted(false); // Remove focus border
+     // Add action listener to the "Modify" button
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Get the event data from the selected row
+                    String eventId = (String) table.getValueAt(selectedRow, 0);
+                    String title = (String) table.getValueAt(selectedRow, 1);
+                    String description = (String) table.getValueAt(selectedRow, 2);
+                    String date = (String) table.getValueAt(selectedRow, 3);
+                    String location = (String) table.getValueAt(selectedRow, 4);
+                    String type = (String) table.getValueAt(selectedRow, 5);
+                    String status = (String) table.getValueAt(selectedRow, 6);
+                    String price = (String) table.getValueAt(selectedRow, 7);
+                    String capacity = (String) table.getValueAt(selectedRow, 8);
+                    
+                    // Open modification dialog with pre-filled data
+                    openModifyEventDialog(eventId, title, description, date, location, type, status, price, capacity);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a row to modify.");
+                }
+            }
+        });
+        
+        // Create remove button
+        JButton removeButton = new JButton("Remove Selected");
+        removeButton.setPreferredSize(new Dimension(150, 30));
+        removeButton.setBackground(new Color(60, 165, 92)); // Green background
+        removeButton.setForeground(new Color(235, 219, 204)); // White text
+        removeButton.setFocusPainted(false); // Remove focus border
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Get the event ID from the selected row
+                    String eventId = (String) table.getValueAt(selectedRow, 0);
+                    // Remove the row from the table model
+                    tableModel.removeRow(selectedRow);
+                    // Delete the event from the database
+                    deleteEventFromDatabase(eventId);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a row to remove.");
+                }
+            }
+        });
+     // Add the "Modify" button to a panel
+        JPanel modifyPanel = new JPanel();
+        modifyPanel.setBackground(Color.WHITE); // Set background color
+        modifyPanel.add(modifyButton); // Add modify button to the panel
+
+        // Add the modify panel to the main panel's SOUTH position
+        mainPanel.add(modifyPanel, BorderLayout.SOUTH);
+     // Create a panel for the remove button
+        JPanel removePanel = new JPanel();
+        removePanel.setBackground(Color.WHITE); // Set background color
+        removePanel.add(removeButton); // Add remove button to the panel
+
+        // Add the remove panel to the main panel's SOUTH position
+        mainPanel.add(removePanel, BorderLayout.SOUTH);
         setVisible(true);
     }
+    
+    private void openModifyEventDialog(String eventId, String title, String description, String date, String location, String type, String status, String price, String capacity) {
+        JDialog modifyDialog = new JDialog(this, "Modify Event", true);
+        modifyDialog.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Create title label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        modifyDialog.add(new JLabel("Title:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        modifyDialog.add(new JTextField(title), gbc);
+
+        // Create description label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        modifyDialog.add(new JLabel("Description:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        modifyDialog.add(new JTextField(description), gbc);
+
+        // Create date label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        modifyDialog.add(new JLabel("Date:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        modifyDialog.add(new JTextField(date), gbc);
+
+        // Create location label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 3;
+        modifyDialog.add(new JLabel("Location:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 3;
+        modifyDialog.add(new JTextField(location), gbc);
+        // Create type label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 4;
+        modifyDialog.add(new JLabel("Type:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.gridwidth = 4;
+        modifyDialog.add(new JTextField(type), gbc);
+        // Create status label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 5;
+        modifyDialog.add(new JLabel("Status:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.gridwidth = 5;
+        modifyDialog.add(new JTextField(status), gbc);
+        // Create price label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 6;
+        modifyDialog.add(new JLabel("Price:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        gbc.gridwidth = 6;
+        modifyDialog.add(new JTextField(price), gbc);
+        
+        // Create capacity label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 7;
+        modifyDialog.add(new JLabel("Capacity:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 7;
+        gbc.gridwidth = 7;
+        modifyDialog.add(new JTextField(capacity), gbc);
+        // Repeat for other fields...
+
+        // Create the "Save" button
+        JButton saveButton = new JButton("Save");
+        saveButton.setBackground(new Color(60, 165, 92)); // Green background
+        saveButton.setForeground(new Color(235, 219, 204)); // White text
+        saveButton.setFocusPainted(false); // Remove focus border
+        saveButton.setFont(new Font("Arial", Font.BOLD, 16)); // Same font as main panel
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        modifyDialog.add(saveButton, gbc);
+
+        // Add action listener to the "Save" button
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get modified data from the fields
+                String newTitle = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(1)).getComponent(1)).getText();
+                String newDescription = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(2)).getComponent(1)).getText();
+                String newDate = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(3)).getComponent(1)).getText();
+                String newLocation= ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(4)).getComponent(1)).getText();
+                String newType = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(5)).getComponent(1)).getText();
+                String newStatus = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(6)).getComponent(1)).getText();
+                String newPrice = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(7)).getComponent(1)).getText();
+                String newCapacity= ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(8)).getComponent(1)).getText();
+                // Update event data in the table
+                int selectedRow = table.getSelectedRow();
+                table.setValueAt(newTitle, selectedRow, 1);
+                table.setValueAt(newDescription, selectedRow, 2);
+                // Repeat for other fields...
+
+                // Update event data in the database
+                updateEventInDatabase(eventId, newTitle, newDescription,newDate,newLocation,newType,newStatus,newPrice,newCapacity);
+
+                // Close the modification dialog
+                modifyDialog.dispose();
+            }
+        });
+
+        // Set dialog properties
+        modifyDialog.setSize(600, 500);
+        modifyDialog.setLocationRelativeTo(this);
+        modifyDialog.setVisible(true);
+    }
+
+    // Helper method to add a field with label to the modification dialog
+    private void addFieldWithLabel(GridBagConstraints gbc, Container container, String labelText, JTextField textField) {
+        JLabel label = createLabel(labelText, Color.black);
+        label.setFont(new Font("Arial", Font.PLAIN, 16));
+        container.add(label, gbc);
+        gbc.gridx++;
+        container.add(textField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+    }
+
+    // Method to update event data in the database
+    private void updateEventInDatabase(String eventId, String title, String description, String date, String location, String type, String status, String price, String capacity) {
+        String url = "jdbc:mysql://localhost:3306/events";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            String query = "UPDATE event SET Titre = ?, Description = ?, Date = ?, Lieu = ?, Type = ?, Status = ?, Prix = ?, Capacite = ? WHERE Eventid = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, title);
+            statement.setString(2, description);
+            statement.setString(3, date);
+            statement.setString(4, location);
+            statement.setString(5, type);
+            statement.setString(6, status);
+            statement.setString(7, price);
+            statement.setString(8, capacity);
+            statement.setString(9, eventId);
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Event updated successfully!");
+            } else {
+                System.out.println("Failed to update event!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Helper method to create a JLabel with specified text and color
+    private JLabel createLabel(String text, Color color) {
+        JLabel label = new JLabel(text);
+        label.setForeground(color);
+        return label;
+    }
+	private void deleteEventFromDatabase(String eventId) {
+        String url = "jdbc:mysql://localhost:3306/events";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            // Create the SQL DELETE query
+            String query = "DELETE FROM event WHERE Eventid = ?";
+            
+            // Prepare the SQL statement
+            PreparedStatement statement = connection.prepareStatement(query);
+            
+            statement.setString(1, eventId);
+
+            // Execute the deletion query
+            int rowsDeleted = statement.executeUpdate();
+            
+            // Check if deletion was successful
+            if (rowsDeleted > 0) {
+                System.out.println("Event deleted successfully!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // Handle connection or query execution errors
+        }
+    }
+    
+
     private Object[][] getEventDataFromDatabase() {
         // Connexion à votre base de données et exécution de la requête SQL pour récupérer les données
         String url = "jdbc:mysql://localhost:3306/events";
@@ -228,21 +575,58 @@ public class Dashboard extends JFrame {
             return new Object[0][0];
         }
     }
-    private JLabel createLabel(String text, Color textColor) {
-        JLabel label = new JLabel(text);
-        label.setForeground(textColor); // Set text color
-        label.setFont(new Font("Arial", Font.PLAIN, 14)); // Set font
-        return label;
+    
+   
+    
+    private void setTextFieldStyle(JTextField textField, String placeholder) {
+        textField.setFont(new Font("Arial", Font.BOLD, 14)); // Set font and size
+        textField.setText(placeholder);
+        textField.setForeground(new Color(128, 128, 128)); // Set placeholder color
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 165, 92), 2), // Set border color and thickness
+            BorderFactory.createEmptyBorder(5, 10, 5, 10) // Set padding
+        ));
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(placeholder)) {
+                    textField.setText("");
+                    textField.setForeground(Color.black); // Set regular text color
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setText(placeholder);
+                    textField.setForeground(new Color(235, 219, 204)); // Set placeholder color
+                }
+            }
+        });
+        
     }
+  
 
     private void createAddEventForm() {
-        addEventDialog = new JDialog(this, "Ajouter un évenement", true);
-        addEventDialog.setLayout(new GridLayout(0, 2));
-
+        addEventDialog = new JDialog(this, "ADD EVENT", true);
+        addEventDialog.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+      
         // Apply the same background color and font as the main panel
-        addEventDialog.getContentPane().setBackground(new Color(60, 165, 92)); // Green background
-        addEventDialog.getContentPane().setForeground(new Color(235, 219, 204)); // White text
-        addEventDialog.setFont(new Font("Arial", Font.BOLD, 18)); // Same font as main panel
+        addEventDialog.getContentPane().setBackground(Color.white); // Green background
+        addEventDialog.getContentPane().setForeground(Color.black); // White text
+        addEventDialog.setFont(new Font("Arial", Font.PLAIN, 18)); // Same font as main panel
+
+        // Add the title label
+        JLabel titleLabel = createLabel("Add Event",new Color(60, 165, 92));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        addEventDialog.add(titleLabel, gbc);
 
         // Create text fields with white background and black text
         JTextField titreField = new JTextField();
@@ -250,8 +634,19 @@ public class Dashboard extends JFrame {
         JTextField dateField = new JTextField();
         JTextField lieuField = new JTextField();
         JTextField typeField = new JTextField();
+        JTextField StatusField = new JTextField();
         JTextField prixField = new JTextField();
         JTextField capaciteField = new JTextField();
+
+        // Call setTextFieldStyle for each text field
+        setTextFieldStyle(titreField, "Enter title...");
+        setTextFieldStyle(descriptionField, "Enter description...");
+        setTextFieldStyle(dateField, "Enter date...");
+        setTextFieldStyle(lieuField, "Enter location...");
+        setTextFieldStyle(typeField, "Enter type...");
+        setTextFieldStyle(StatusField, "Enter status...");
+        setTextFieldStyle(prixField, "Enter price...");
+        setTextFieldStyle(capaciteField, "Enter capacity...");
 
         // Apply the same background and foreground colors as the main panel
         titreField.setBackground(Color.WHITE);
@@ -264,34 +659,47 @@ public class Dashboard extends JFrame {
         lieuField.setForeground(Color.BLACK);
         typeField.setBackground(Color.WHITE);
         typeField.setForeground(Color.BLACK);
+        StatusField.setBackground(Color.WHITE);
+        StatusField.setForeground(Color.BLACK);
         prixField.setBackground(Color.WHITE);
         prixField.setForeground(Color.BLACK);
         capaciteField.setBackground(Color.WHITE);
         capaciteField.setForeground(Color.BLACK);
 
-        // Add labels and fields to the form with the same style as the main panel
-        addEventDialog.add(createLabel("Title:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(titreField);
-        addEventDialog.add(createLabel("Description:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(descriptionField);
-        addEventDialog.add(createLabel("Date:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(dateField);
-        addEventDialog.add(createLabel("Location:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(lieuField);
-        addEventDialog.add(createLabel("Type:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(typeField);
-        addEventDialog.add(createLabel("Price:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(prixField);
-        addEventDialog.add(createLabel("Capacity:", new Color(235, 219, 204))); // White label
-        addEventDialog.add(capaciteField);
+        // Add fields with labels
+        gbc.gridwidth = 1; // Reset grid width
+        gbc.anchor = GridBagConstraints.EAST;
+
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Title:", titreField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Description:", descriptionField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Date:", dateField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Location:", lieuField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Type:", typeField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Status:", StatusField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Price:", prixField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Capacity:", capaciteField);
 
         // Add a button to validate the event addition
         JButton addButton = new JButton("Add");
-        addButton.setPreferredSize(new Dimension(140, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Green background
         addButton.setForeground(new Color(235, 219, 204)); // White text
         addButton.setFocusPainted(false); // Remove focus border
         addButton.setFont(new Font("Arial", Font.BOLD, 16)); // Same font as main panel
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        addEventDialog.add(addButton, gbc);
+
+        // Add action listener to the "Add" button
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -301,113 +709,26 @@ public class Dashboard extends JFrame {
                 String date = dateField.getText();
                 String lieu = lieuField.getText();
                 String type = typeField.getText();
+                String Status = StatusField.getText();
                 String prix = prixField.getText();
                 String capacite = capaciteField.getText();
 
                 // Add the event to the database
-                addEventToDatabase(titre, description, date, lieu, type, prix, capacite);
+                addEventToDatabase(titre, description, date, lieu, type, Status, prix, capacite);
 
                 // Close the form after addition
                 addEventDialog.dispose();
             }
         });
-        addEventDialog.add(addButton);
 
         // Set the properties of the JDialog
-        addEventDialog.setSize(400, 300);
+        addEventDialog.setSize(600, 500);
         addEventDialog.setLocationRelativeTo(this);
         addEventDialog.setVisible(true);
     }
-    class DeleteButtonRenderer extends JButton implements TableCellRenderer {
-        public DeleteButtonRenderer() {
-            setOpaque(true);
-        }
 
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((value == null) ? "" : value.toString());
-            return this;
-        }
-    }
-
-    class DeleteButtonEditor extends DefaultCellEditor {
-        private JButton button;
-        private String eventId;
-        private Component parentComponent; // Ajout d'un champ pour stocker le composant parent
-
-        public DeleteButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton("Supprimer");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Implement the logic to delete the corresponding event
-                    deleteEvent(eventId);
-                }
-            });
-        }
-        private void deleteEvent(String eventId) {
-            String url = "jdbc:mysql://localhost:3306/events";
-            String username = "root";
-            String password = "";
-
-            try (Connection connection = DriverManager.getConnection(url, username, password)) {
-                // Créer la requête SQL de suppression
-                String query = "DELETE FROM event WHERE Eventid = ?";
-                
-                // Préparer la déclaration SQL
-                PreparedStatement statement = connection.prepareStatement(query);
-                
-                // Définir la valeur du paramètre dans la requête SQL
-                statement.setString(1, eventId);
-
-                // Exécuter la requête de suppression
-                int rowsDeleted = statement.executeUpdate();
-                
-                // Vérifier si la suppression a réussi
-                if (rowsDeleted > 0) {
-                    System.out.println("L'événement a été supprimé avec succès !");
-                    // Actualiser l'affichage si nécessaire
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                // Gérer les erreurs de connexion ou d'exécution de la requête
-            }
-        }
-
-        private void deleteEventFromTable(int rowIndex) {
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            String eventId = model.getValueAt(rowIndex, 0).toString(); // Obtenez l'ID de l'événement de la première colonne
-
-            // Demander une confirmation à l'utilisateur avec le composant parent
-            int option = JOptionPane.showConfirmDialog(parentComponent, "Êtes-vous sûr de vouloir supprimer cet événement ?", "Confirmation de suppression", JOptionPane.YES_NO_OPTION);
-
-            // Si l'utilisateur confirme la suppression
-            if (option == JOptionPane.YES_OPTION) {
-                // Supprimer l'événement de la base de données
-                deleteEvent(eventId);
-                
-                // Supprimer la ligne de la table
-                model.removeRow(rowIndex);
-                
-                // Afficher un message de suppression réussie avec le composant parent
-                JOptionPane.showMessageDialog(parentComponent, "Suppression réussie !", "Suppression réussie", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-
-
-      
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            eventId = (String) table.getValueAt(row, 0); // Assuming the event ID is in the first column
-            return button;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return button.getText();
-        }
-    }
+  
+  
 
     private void filterEvents() {
         // Récupérer le texte saisi par l'utilisateur
@@ -479,15 +800,15 @@ public class Dashboard extends JFrame {
 
 
  // Ajouter une méthode pour ajouter un événement à la base de données
-    private void addEventToDatabase(String titre, String description, String date, String lieu, String type, String prix, String capacite) {
+    private void addEventToDatabase(String titre, String description, String date, String lieu, String type,String Status, String prix, String capacite) {
         String url = "jdbc:mysql://localhost:3306/events";
         String username = "root";
         String password = "";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             // Créer la requête SQL d'insertion
-            String query = "INSERT INTO event (Titre, Description, Date, Lieu, Type, Prix, Capacite) " +
-                           "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO event (Titre, Description, Date, Lieu, Type, Status,Prix, Capacite) " +
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
             // Préparer la déclaration SQL
             PreparedStatement statement = connection.prepareStatement(query);
@@ -498,8 +819,9 @@ public class Dashboard extends JFrame {
             statement.setString(3, date);
             statement.setString(4, lieu);
             statement.setString(5, type);
-            statement.setString(6, prix);
-            statement.setString(7, capacite);
+            statement.setString(6, Status);
+            statement.setString(7, prix);
+            statement.setString(8, capacite);
 
             // Exécuter la requête d'insertion
             int rowsInserted = statement.executeUpdate();
@@ -545,6 +867,7 @@ public class Dashboard extends JFrame {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         return button;
     }
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {

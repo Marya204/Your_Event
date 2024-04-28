@@ -12,25 +12,26 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+
+import Projet.LoginForm;
 
 
 public class Dashboard extends JFrame {
     private JPanel sidebarPanel;
-    private JButton dashboardButton, settingsButton, helpButton,invitebutton, logoutButton;
+    private JButton dashboardButton, ticketsButton, participantButton,invitebutton, logoutButton;
     private JDialog addEventDialog;
     private JPanel mainPanel;
     private JTextField searchField; // Declare searchField at the class level
     private JTable table; // Declare table at the class level
     private DefaultTableModel tableModel;
-    private Tickets ticketsPanel; // Define an instance of Tickets
+    private Tickets TicketstContentPanel; // Define an instance of Tickets
     private Participant ParticipantContentPanel; // Define an instance of Tickets
     private Invite inviteContentPanel; // Define an instance of Tickets
 
  
     private void switchToTicketsContent() {
         mainPanel.removeAll(); // Remove any existing components from the main panel
-        mainPanel.add(ticketsPanel); // Add the tickets panel to the main panel
+        mainPanel.add(TicketstContentPanel); // Add the tickets panel to the main panel
         mainPanel.revalidate(); // Revalidate the main panel to reflect the changes
         mainPanel.repaint(); // Repaint the main panel
     }
@@ -55,10 +56,6 @@ public class Dashboard extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         // Création du panneau latéral (sidebar)
-        
-   
-    
-    
         sidebarPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -83,12 +80,12 @@ public class Dashboard extends JFrame {
 
         // Create buttons with transparent background
         dashboardButton = createButton("EVENTS", new Color(0, 102, 51)); // Green color
-        settingsButton = createButton("TICKETS", new Color(60, 165, 92)); // Light green color
-        helpButton = createButton("PARTICIPANTS", new Color(0, 102, 51)); // Green color
+        ticketsButton = createButton("TICKETS", new Color(60, 165, 92)); // Light green color
+        participantButton = createButton("PARTICIPANTS", new Color(0, 102, 51)); // Green color
         invitebutton=createButton("GUESTS", new Color(0, 102, 51)); // Green color
         dashboardButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\evenement.png"));
-        settingsButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\billets-davion.png"));
-        helpButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\participation.png"));
+        ticketsButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\billets-davion.png"));
+        participantButton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\participation.png"));
         invitebutton.setIcon(new ImageIcon("C:\\Users\\lenovo\\Downloads\\invites.png"));
         // Create logout button with icon
         logoutButton = new JButton("Log out",
@@ -101,14 +98,14 @@ public class Dashboard extends JFrame {
 
      // Add buttons with equal margins using EmptyBorder
         dashboardButton.setBorder(BorderFactory.createEmptyBorder(10,10, 10, 10));
-        settingsButton.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        helpButton.setBorder(BorderFactory.createEmptyBorder(10,45, 10, 10));
+        ticketsButton.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        participantButton.setBorder(BorderFactory.createEmptyBorder(10,45, 10, 10));
         invitebutton.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         
      // Create an instance of Tickets
-        ticketsPanel = new Tickets();
+        TicketstContentPanel = new Tickets();
         // Add action listener to the "Tickets" button
-        settingsButton.addActionListener(new ActionListener() {
+        ticketsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Switch to the tickets content when the button is clicked
@@ -116,9 +113,9 @@ public class Dashboard extends JFrame {
             }
         });
         ParticipantContentPanel = new Participant();
-        inviteContentPanel= new Invite();
+        inviteContentPanel = new Invite();
         // Add action listener to the "Tickets" button
-        settingsButton.addActionListener(new ActionListener() {
+        ticketsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Switch to the tickets content when the button is clicked
@@ -127,7 +124,7 @@ public class Dashboard extends JFrame {
         });
        
         // Add action listeners for buttons
-        helpButton.addActionListener(new ActionListener() {
+        participantButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToParticipantContent();
@@ -139,13 +136,15 @@ public class Dashboard extends JFrame {
                 switchToInviteContent();
             }
         });
+        
+        
         sidebarPanel.add(titleLabel);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between title and buttons
         sidebarPanel.add(dashboardButton);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between buttons
-        sidebarPanel.add(settingsButton);
+        sidebarPanel.add(ticketsButton);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between buttons
-        sidebarPanel.add(helpButton);
+        sidebarPanel.add(participantButton);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space between buttons
         sidebarPanel.add(invitebutton);
         sidebarPanel.add(Box.createVerticalGlue());
@@ -228,9 +227,6 @@ public class Dashboard extends JFrame {
             }
         });
 
-   
-
-       
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -262,7 +258,7 @@ public class Dashboard extends JFrame {
         mainPanel.add(scrollPane);
      // Create a "Modify" button
         JButton modifyButton = new JButton("Modify Selected");
-        modifyButton.setPreferredSize(new Dimension(150, 30));
+        modifyButton.setPreferredSize(new Dimension(200, 40));
         modifyButton.setBackground(new Color(60, 165, 92)); // Green background
         modifyButton.setForeground(new Color(235, 219, 204)); // White text
         modifyButton.setFocusPainted(false); // Remove focus border
@@ -293,7 +289,7 @@ public class Dashboard extends JFrame {
         
         // Create remove button
         JButton removeButton = new JButton("Remove Selected");
-        removeButton.setPreferredSize(new Dimension(150, 30));
+        removeButton.setPreferredSize(new Dimension(200, 40));
         removeButton.setBackground(new Color(60, 165, 92)); // Green background
         removeButton.setForeground(new Color(235, 219, 204)); // White text
         removeButton.setFocusPainted(false); // Remove focus border
@@ -313,20 +309,29 @@ public class Dashboard extends JFrame {
                 }
             }
         });
-     // Add the "Modify" button to a panel
+        // Add the "Modify" button to a panel
         JPanel modifyPanel = new JPanel();
         modifyPanel.setBackground(Color.WHITE); // Set background color
         modifyPanel.add(modifyButton); // Add modify button to the panel
-
         // Add the modify panel to the main panel's SOUTH position
         mainPanel.add(modifyPanel, BorderLayout.SOUTH);
-     // Create a panel for the remove button
+     
+        // Create a panel for the remove button
         JPanel removePanel = new JPanel();
         removePanel.setBackground(Color.WHITE); // Set background color
         removePanel.add(removeButton); // Add remove button to the panel
 
         // Add the remove panel to the main panel's SOUTH position
         mainPanel.add(removePanel, BorderLayout.SOUTH);
+     // Add the "Modify" button to the panel with the table
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(modifyButton);
+        buttonPanel.add(removeButton);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(mainPanel);
+        
         setVisible(true);
     }
     
@@ -575,9 +580,7 @@ public class Dashboard extends JFrame {
             return new Object[0][0];
         }
     }
-    
    
-    
     private void setTextFieldStyle(JTextField textField, String placeholder) {
         textField.setFont(new Font("Arial", Font.BOLD, 14)); // Set font and size
         textField.setText(placeholder);
@@ -727,9 +730,6 @@ public class Dashboard extends JFrame {
         addEventDialog.setVisible(true);
     }
 
-  
-  
-
     private void filterEvents() {
         // Récupérer le texte saisi par l'utilisateur
         String lieu = searchField.getText().trim().toLowerCase();
@@ -868,7 +868,6 @@ public class Dashboard extends JFrame {
         return button;
     }
     
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

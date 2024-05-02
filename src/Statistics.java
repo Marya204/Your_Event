@@ -4,10 +4,7 @@ package Projet;
 
 import javax.swing.*;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.sql.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

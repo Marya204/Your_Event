@@ -100,7 +100,7 @@ public class LoginForm extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 dispose();
                 // Ouvre la page de réinitialisation de mot de passe lorsque le label est cliqué
-                new ResetPassword();
+                new ResetPasswordForm();
             }
         });
 
@@ -111,7 +111,7 @@ public class LoginForm extends JFrame {
     }
 
     private boolean authenticateUser(String email, String password) {
-        String url = "jdbc:mysql://localhost:3306/your_event";
+        String url = "jdbc:mysql://localhost:3306/events";
         String user = "root";
         String dbPassword = "";
 

@@ -18,11 +18,13 @@ public class Tickets extends JPanel {
 
     public Tickets() {
         setLayout(new BorderLayout());
-
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
 
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Utiliser un BoxLayout vertical
+        // Add a marge in the top of the page
+        mainPanel.add(Box.createVerticalStrut(20));
         // Add title "Tickets" to the main panel
         JLabel titleLabelEvents = new JLabel("Tickets", JLabel.CENTER);
         titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
@@ -59,7 +61,7 @@ public class Tickets extends JPanel {
         searchPanel.add(Box.createHorizontalStrut(300)); // Add space between search field and "Add Event" button
 
         // Create "Add Event" button with icon
-        ImageIcon plusIcon = new ImageIcon("C:\\Users\\lenovo\\Downloads\\plus.png"); // Change to your icon file path
+        ImageIcon plusIcon = new ImageIcon("C:\\Users\\hp\\Downloads\\Image\\Image\\plus.png"); // Change to your icon file path
        
         addButton = new JButton("Add a Ticket",plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
@@ -145,13 +147,28 @@ public class Tickets extends JPanel {
                 }
             }
         });
-
+        
+        JButton backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(200, 40));
+        backButton.setBackground(new Color(255,255,255)); // Green background
+        backButton.setForeground(new Color(0,0,0)); // White text
+        backButton.setFocusPainted(false); // Remove focus border
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               
+               Dashboard dashboard = new Dashboard();
+                dashboard.setVisible(true);
+            }
+        });
 
         // Create a panel for the remove button
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setBackground(Color.WHITE); // Set background color
         buttonsPanel.add(modifyButton); // Add modify button to the panel
         buttonsPanel.add(removeButton); // Add remove button to the panel
+        buttonsPanel.add(backButton); // Add back button to the panel
+
 
         // Add the buttons panel to the main panel's SOUTH position
         mainPanel.add(buttonsPanel, BorderLayout.SOUTH);

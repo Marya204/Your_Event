@@ -68,7 +68,7 @@ public class Invite extends JPanel {
 
         // Create "Add Invite" button
         ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\hp\\\\Downloads\\\\Image\\\\Image\\\\plus.png");
-        addButton = new JButton("Add an GUEST");
+        addButton = new JButton("Add an GUEST",plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
         addButton.setForeground(new Color(235, 219, 204)); // Set foreground color
@@ -303,7 +303,7 @@ public class Invite extends JPanel {
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             // Créer la requête SQL pour récupérer les données des tickets
-        	String query = "SELECT  Inviteid, nom , Email , Eventid FROM invite";
+        	String query = "SELECT  Inviteid, name , Email , Eventid FROM invite";
         	
             // Préparer la déclaration SQL
             try (Statement statement = connection.createStatement();

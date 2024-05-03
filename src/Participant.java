@@ -12,12 +12,13 @@ import java.awt.event.FocusListener;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+
 public class Participant extends JPanel {
 	private JPanel mainPanel;
     private JTextField searchField;
     private JDialog addEventDialog;
     private JTable table;
-    private Tickets eventsPanel; // Define an instance of Tickets
     private DefaultTableModel tableModel;
 
     public Participant() {
@@ -26,9 +27,11 @@ public class Participant extends JPanel {
         // Initialize main panel
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Utiliser un BoxLayout vertical
+        // Add a marge in the top of the page
+        mainPanel.add(Box.createVerticalStrut(20));
         // Add title "Participants" to the main panel
-        JLabel titleLabelEvents = new JLabel("Participants", JLabel.CENTER);
+        JLabel titleLabelEvents = new JLabel("PARTICIPANTS", JLabel.CENTER);
         titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabelEvents.setForeground(new Color(60, 165, 92)); // Green color
         mainPanel.add(titleLabelEvents, BorderLayout.NORTH);
@@ -67,7 +70,7 @@ public class Participant extends JPanel {
         searchPanel.add(Box.createHorizontalStrut(300)); // Add space between search field and "Add Event" button
 
         // Create "Add Event" button with icon
-        ImageIcon plusIcon = new ImageIcon("C:\\Users\\lenovo\\Downloads\\plus.png"); // Change to your icon file path
+        ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\hp\\\\Downloads\\\\Image\\\\Image\\\\plus.png"); // Change to your icon file path
         JButton addButton = new JButton("Add participant", plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
@@ -151,6 +154,20 @@ public class Participant extends JPanel {
                 }
             }
         });
+        
+        JButton backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(200, 40));
+        backButton.setBackground(new Color(255,255,255)); // Green background
+        backButton.setForeground(new Color(0,0,0)); // White text
+        backButton.setFocusPainted(false); // Remove focus border
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               
+               Dashboard dashboard = new Dashboard();
+                dashboard.setVisible(true);
+            }
+        });
         // Add the "Modify" button to a panel
         JPanel modifyPanel = new JPanel();
         modifyPanel.setBackground(Color.WHITE); // Set background color
@@ -170,6 +187,8 @@ public class Participant extends JPanel {
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(modifyButton);
         buttonPanel.add(removeButton);
+        buttonPanel.add(backButton);
+
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -508,6 +527,7 @@ public class Participant extends JPanel {
         }
     }
 
+    
 
     private void filterEvents() {
         // Récupérer le texte saisi par l'utilisateur
@@ -602,6 +622,18 @@ public class Participant extends JPanel {
 
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Participant());
+    	SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JFrame frame = new JFrame("Participants Management");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                Participant ParticipantContentPanel = new Participant();
+                frame.add(ParticipantContentPanel);
+
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
     }
 }

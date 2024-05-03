@@ -180,13 +180,13 @@ public class Dashboard extends JFrame {
 
         // Add title "Événements" to the main panel
         JLabel titleLabelEvents = new JLabel("Dahboard ", JLabel.CENTER);
-        titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 32));
         titleLabelEvents.setForeground(new Color(60, 165, 92)); // Green color
         mainPanel.add(titleLabelEvents);
 
         // Création du slogan JLabel
         JLabel sloganLabel = new JLabel("**** Your event planner **** ", JLabel.CENTER);
-        sloganLabel.setFont(new Font("Arial", Font.PLAIN, 18)); // Vous pouvez ajuster la police et la taille selon vos préférences
+        sloganLabel.setFont(new Font("Arial", Font.PLAIN, 24)); // Vous pouvez ajuster la police et la taille selon vos préférences
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;

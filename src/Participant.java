@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 public class Participant extends JPanel {
-    private JPanel mainPanel;
+	private JPanel mainPanel;
     private JTextField searchField;
     private JDialog addEventDialog;
     private JTable table;
@@ -89,7 +89,7 @@ public class Participant extends JPanel {
         
         
         // Add table to the main panel
-        String[] columns = { "Participant ID", "Name", "Email" };
+        String[] columns = { "Participant ID", "Name", "Email", "Event ID" };
         Object[][] data = getParticipantDataFromDatabase();
         tableModel = new DefaultTableModel(data, columns);
         table = new JTable(tableModel);
@@ -120,10 +120,10 @@ public class Participant extends JPanel {
 
                     String Name = (String) table.getValueAt(selectedRow, 1);
                     String Email = (String) table.getValueAt(selectedRow, 2);
-              
-                    
+                   
+                    int Eventid = (int) table.getValueAt(selectedRow, 0);
                     // Open modification dialog with pre-filled data
-                    openModifyEventDialog(ParticipantID,Name,Email);
+                    openModifyparticipantDialog(ParticipantID,Name,Email,Eventid);
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select a row to modify.");
                 }
@@ -175,34 +175,50 @@ public class Participant extends JPanel {
         add(mainPanel);
         setVisible(true);
     }
-    private void openModifyEventDialog(int ParticipantID, String Name, String Email) {
+    private void openModifyparticipantDialog(int ParticipantID, String Name, String Email, int Eventid) {
         JDialog modifyDialog = new JDialog();
         modifyDialog.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        modifyDialog.getContentPane().setBackground(Color.white); // Green background
+        modifyDialog.getContentPane().setForeground(Color.black); // White text
+        modifyDialog.setFont(new Font("Arial", Font.PLAIN, 18)); // Same font as main panel
 
-        // Create Name label and text field
+        // Create and customize the title label
+        JLabel titleLabel = createLabel("Modify Participant", new Color(60, 165, 92));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        modifyDialog.add(new JLabel("Name:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        JTextField nameTextField = new JTextField(Name);
-        modifyDialog.add(nameTextField, gbc);
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        modifyDialog.add(titleLabel, gbc);
 
-        // Create description label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        modifyDialog.add(new JLabel("Email:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        JTextField emailTextField = new JTextField(Email);
-        modifyDialog.add(emailTextField, gbc);
+        // Create text fields with the same style as the addition form
+        JTextField nameTextField = new JTextField();
+        JTextField emailTextField = new JTextField();
+        JTextField EventidTextField = new JTextField();
+
+        // Apply the same text field style as the addition form
+        setTextFieldStyle(nameTextField, "Enter Name...");
+        setTextFieldStyle(emailTextField, "Enter Email...");
+        setTextFieldStyle(EventidTextField, "Enter Event ID...");
+
+        // Set the text of the text fields to the provided values
+        nameTextField.setText(Name);
+        emailTextField.setText(Email);
+        EventidTextField.setText(String.valueOf(Eventid));
+
+        // Add fields with labels
+        gbc.gridwidth = 1; // Reset grid width
+        gbc.anchor = GridBagConstraints.EAST;
+
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Name:", nameTextField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Email:", emailTextField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Event ID:", EventidTextField);
 
         // Create the "Save" button
         JButton saveButton = new JButton("Save");
@@ -223,45 +239,46 @@ public class Participant extends JPanel {
                 // Get modified data from the fields
                 String newName = nameTextField.getText();
                 String newEmail = emailTextField.getText();
-
+                int newEventid = Integer.parseInt(EventidTextField.getText());
                 // Update event data in the table
                 int selectedRow = table.getSelectedRow();
                 table.setValueAt(newName, selectedRow, 1);
                 table.setValueAt(newEmail, selectedRow, 2);
-
+                table.setValueAt(newEventid, selectedRow, 3);
                 // Update event data in the database
-                updateParticipantInDatabase(ParticipantID, newName, newEmail);
+                updateParticipantInDatabase(ParticipantID, newName, newEmail, newEventid);
 
                 // Close the modification dialog
                 modifyDialog.dispose();
             }
         });
-
         // Set dialog properties
-        modifyDialog.setSize(600, 500);
+        modifyDialog.setSize(400, 400);
         modifyDialog.setLocationRelativeTo(this);
         modifyDialog.setVisible(true);
     }
 
+
+
  // Method to update event data in the database
-    private void updateParticipantInDatabase(int participantID,String Name, String Email) {
+    private void updateParticipantInDatabase(int participantID, String Name, String Email, int Eventid) {
         String url = "jdbc:mysql://localhost:3306/events";
         String username = "root";
         String password = "";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            String query = "UPDATE participant SET Name = ?, Email = ? WHERE ParticipantID = ?";
+            String query = "UPDATE participant SET Name = ?, Email = ?, Eventid = ? WHERE ParticipantID = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, Name);
             statement.setString(2, Email);
-            statement.setLong(3, participantID);
-          
+            statement.setInt(3, Eventid); // Utilisation de setInt pour Eventid
+            statement.setInt(4, participantID);
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Participant updated successfully!");
+                System.out.println("Participant mis à jour avec succès !");
             } else {
-                System.out.println("Failed to update participant!");
+                System.out.println("Échec de la mise à jour du participant !");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -309,10 +326,11 @@ public class Participant extends JPanel {
 
             List<Object[]> participantData = new ArrayList<>();
             while (resultSet.next()) {
-                Object[] row = new Object[3];
+                Object[] row = new Object[4];
                 row[0] = resultSet.getInt("ParticipantID"); // Correct column name
                 row[1] = resultSet.getString("Name"); // Correct column name
                 row[2] = resultSet.getString("Email");
+                row[3] = resultSet.getInt("Eventid");
                 participantData.add(row);
             }
 
@@ -396,12 +414,12 @@ public class Participant extends JPanel {
         // Create text fields with white background and black text
         JTextField NameField = new JTextField();
         JTextField EmailField = new JTextField();
-      
+        JTextField EventIDField = new JTextField();
 
         // Call setTextFieldStyle for each text field
         setTextFieldStyle(NameField, "Enter Name...");
         setTextFieldStyle(EmailField, "Enter Email...");
-   
+        setTextFieldStyle(EventIDField, "Enter Event ID...");
 
         // Apply the same background and foreground colors as the main panel
         NameField.setBackground(Color.WHITE);
@@ -418,6 +436,8 @@ public class Participant extends JPanel {
         addFieldWithLabel(gbc, addEventDialog, "Name:", NameField);
         gbc.gridy++;
         addFieldWithLabel(gbc, addEventDialog, "Email:", EmailField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addEventDialog, "Event ID:", EventIDField);
       
 
         // Add a button to validate the event addition
@@ -439,10 +459,11 @@ public class Participant extends JPanel {
                 // Get the data entered in the form
                 String Name = NameField.getText();
                 String Email = EmailField.getText();
-               
+             
+                int EventID = Integer.parseInt(EventIDField.getText());
 
                 // Add the event to the database
-                addParticipantToDatabase(Name, Email);
+                addParticipantToDatabase(Name, Email,EventID);
 
                 // Close the form after addition
                 addEventDialog.dispose();
@@ -450,20 +471,20 @@ public class Participant extends JPanel {
         });
 
         // Set the properties of the JDialog
-        addEventDialog.setSize(600, 500);
+        addEventDialog.setSize(400, 400);
         addEventDialog.setLocationRelativeTo(this);
         addEventDialog.setVisible(true);
     }
  // Ajouter une méthode pour ajouter un événement à la base de données
-    private void addParticipantToDatabase(String Name, String Email) {
+    private void addParticipantToDatabase(String Name, String Email,int Eventid) {
         String url = "jdbc:mysql://localhost:3306/events";
         String username = "root";
         String password = "";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             // Créer la requête SQL d'insertion
-            String query = "INSERT INTO participant (Name, Email) " +
-                           "VALUES (?, ?)";
+            String query = "INSERT INTO participant (Name, Email,EventID) " +
+                           "VALUES (?, ?,?)";
             
             // Préparer la déclaration SQL
             PreparedStatement statement = connection.prepareStatement(query);
@@ -471,7 +492,8 @@ public class Participant extends JPanel {
             // Définir les valeurs des paramètres dans la requête SQL
             statement.setString(1, Name);
             statement.setString(2, Email);
-           
+            statement.setLong(3, Eventid);
+            
             // Exécuter la requête d'insertion
             int rowsInserted = statement.executeUpdate();
             
@@ -492,7 +514,7 @@ public class Participant extends JPanel {
         String Name = searchField.getText().trim().toLowerCase();
 
         // Récupérer les données depuis la base de données en fonction du Name filtré
-        Object[][] filteredData = getEventDataFromDatabase(Name);
+        Object[][] filteredData = getparticipantDataFromDatabase(Name);
 
         // Utiliser directement la variable de table au niveau de la classe
         DefaultTableModel model = (DefaultTableModel) this.table.getModel();
@@ -502,14 +524,13 @@ public class Participant extends JPanel {
             model.addRow(row); // Ajouter les lignes filtrées
         }
     }
-    private Object[][] getEventDataFromDatabase(String Name) {
-        // Connexion à votre base de données et exécution de la requête SQL pour récupérer les données
+    private Object[][] getparticipantDataFromDatabase(String Name) {
         String url = "jdbc:mysql://localhost:3306/events";
         String username = "root";
         String password = "";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            String query = "SELECT * FROM participant"; // Retrieve data from the 'participant' table
+            String query = "SELECT * FROM participant"; // Récupérer les données de la table 'participant'
 
             // Ajout de la clause WHERE si un nom est spécifié
             if (Name != null && !Name.isEmpty()) {
@@ -519,7 +540,7 @@ public class Participant extends JPanel {
             PreparedStatement statement = connection.prepareStatement(query);
 
             // Si un Nom est spécifié, définissez le paramètre dans la requête
-            if (Name!= null && !Name.isEmpty()) {
+            if (Name != null && !Name.isEmpty()) {
                 statement.setString(1, "%" + Name + "%");
             }
 
@@ -528,11 +549,11 @@ public class Participant extends JPanel {
             // Traitement des résultats et création des données filtrées
             List<Object[]> participantData = new ArrayList<>();
             while (resultSet.next()) {
-                Object[] row = new Object[3];
+                Object[] row = new Object[4];
                 row[0] = resultSet.getInt("ParticipantID");
                 row[1] = resultSet.getString("Name");
                 row[2] = resultSet.getString("Email");
-
+                row[3] = resultSet.getInt("Eventid"); // Utilisation de getInt pour Eventid
                 participantData.add(row);
             }
 
@@ -548,7 +569,6 @@ public class Participant extends JPanel {
             return new Object[0][0];
         }
     }
-
     // Helper method to create custom buttons
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {

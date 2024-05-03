@@ -13,10 +13,20 @@ public class Dashboard extends JFrame {
     private Tickets TicketstContentPanel; // Define an instance of Tickets
     private Participant ParticipantContentPanel; // Define an instance of Tickets
     private Invite inviteContentPanel; // Define an instance of Tickets
+    private Statistics statsContentPanel; // Define an instance of Tickets
+   private Event eventContentPanel;
    
    
    // Method to switch to event content
-  
+   private void switchToeventContent() {
+       mainPanel.removeAll(); // Remove any existing components from the main panel
+       mainPanel.add(eventContentPanel); // Add the tickets panel to the main panel
+       mainPanel.revalidate(); // Revalidate the main panel to reflect the changes
+       mainPanel.repaint(); // Repaint the main panel
+   }
+   
+   // Method to switch to tickets content
+
     private void switchToTicketsContent() {
         mainPanel.removeAll(); // Remove any existing components from the main panel
         mainPanel.add(TicketstContentPanel); // Add the tickets panel to the main panel
@@ -24,7 +34,7 @@ public class Dashboard extends JFrame {
         mainPanel.repaint(); // Repaint the main panel
     }
     
-    // Method to switch to help content
+    // Method to switch to participant content
     private void switchToParticipantContent() {
         mainPanel.removeAll(); // Remove any existing components from the main panel
         mainPanel.add(ParticipantContentPanel); // Add the help content panel to the main panel
@@ -40,11 +50,23 @@ public class Dashboard extends JFrame {
         mainPanel.repaint(); // Repaint the main panel
     }
  
-
+    // Method to switch to statistics content
+    
+    private void switchTostatsContent() {
+        mainPanel.removeAll(); // Remove any existing components from the main panel
+        mainPanel.add(statsContentPanel); // Add the tickets panel to the main panel
+        mainPanel.revalidate(); // Revalidate the main panel to reflect the changes
+        mainPanel.repaint(); // Repaint the main panel
+    }
+    
     public Dashboard() {
         setTitle("Dashboard - YourEvent");
         setSize(1100, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+      
+        Color backgroundColor = new Color(255, 255, 255); // Blanc
+        // Appliquer la couleur de fond à votre JFrame
+        getContentPane().setBackground(backgroundColor);
         getContentPane().setLayout(new BorderLayout());
         // Création du panneau latéral (sidebar)
         sidebarPanel = new JPanel() {
@@ -60,6 +82,7 @@ public class Dashboard extends JFrame {
                 g2d.fillRect(0, 0, w, h);
             }
         };
+        
         
         sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
 
@@ -100,15 +123,17 @@ public class Dashboard extends JFrame {
         logoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         
-     // Add action listener to the "statistics" button
+        
+     // Create an instance of Tickets
+       eventContentPanel = new Event();
+     // Add action listener to the "event" button
         eventbutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	Event event= new Event();
-                 // Rendez la fenêtre visible
-                 event.setVisible(true);
+            	 switchToeventContent();
             }
         });
+        
      // Create an instance of Tickets
         TicketstContentPanel = new Tickets();
         // Add action listener to the "Tickets" button
@@ -141,15 +166,16 @@ public class Dashboard extends JFrame {
             }
         });
         
-     // Add action listener to the "statistics" button
+        // Create an instance of statistics
+        statsContentPanel = new Statistics();
         statsbutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	 Statistics stats = new Statistics();
-                 // Rendez la fenêtre visible
-                 stats.setVisible(true);
+                switchTostatsContent();
             }
         });
+        
+     
         
         
         sidebarPanel.add(titleLabel);
@@ -214,7 +240,7 @@ public class Dashboard extends JFrame {
             }
         });
         
-    
+       
         setVisible(true);
     }
     

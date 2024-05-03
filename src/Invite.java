@@ -15,7 +15,7 @@ import javax.swing.event.DocumentListener;
 
 public class Invite extends JPanel {
     private JTextField searchField;
-    private JButton addButton, modifyButton, removeButton;
+    private JButton addButton, removeButton;
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel mainPanel;
@@ -28,7 +28,10 @@ public class Invite extends JPanel {
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
 
-        // Add title "Invités" to the main panel
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Use a vertical BoxLayout
+        // Add a marge in the top of the page
+        mainPanel.add(Box.createVerticalStrut(20));
+        // Add title "InvitÃ©s" to the main panel
         JLabel titleLabelEvents = new JLabel("GUESTS", JLabel.CENTER);
         titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabelEvents.setForeground(new Color(60, 165, 92)); // Green color
@@ -40,7 +43,7 @@ public class Invite extends JPanel {
         searchPanel.setBackground(new Color(235, 235, 235)); // Set background color
 
         // Create the search field with placeholder text
-        searchField = new JTextField("Search for an GUEST");
+        searchField = new JTextField("Search for a guest");
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(200, 40));
         searchField.setBorder(BorderFactory.createLineBorder(new Color(60, 165, 92))); // Set border color
@@ -64,7 +67,7 @@ public class Invite extends JPanel {
         searchPanel.add(Box.createHorizontalStrut(300)); // Add space between search field and "Add Event" button
 
         // Create "Add Invite" button
-        ImageIcon plusIcon = new ImageIcon("C:\\Users\\pc\\Pictures\\Image\\plus.png");
+        ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\hp\\\\Downloads\\\\Image\\\\Image\\\\plus.png");
         addButton = new JButton("Add an GUEST");
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
@@ -78,13 +81,13 @@ public class Invite extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createAddInviteForm(); // Afficher le formulaire d'ajout d'invité
+                createAddInviteForm(); // Afficher le formulaire d'ajout d'invitÃ©
             }
         });
 
         String[] columns = {"Invite ID", "Name", "Email", "Eventid"};
 
-        // Récupération des données depuis la base de données
+        // RÃ©cupÃ©ration des donnÃ©es depuis la base de donnÃ©es
         Object[][] data = getinviteDataFromDatabase();
         tableModel = new DefaultTableModel(data, columns);
         table = new JTable(tableModel);
@@ -148,14 +151,27 @@ public class Invite extends JPanel {
                 }
             }
         });
-
+        
+        JButton backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(200, 40));
+        backButton.setBackground(new Color(255,255,255)); // Green background
+        backButton.setForeground(new Color(0,0,0)); // White text
+        backButton.setFocusPainted(false); // Remove focus border
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               
+               Dashboard dashboard = new Dashboard();
+                dashboard.setVisible(true);
+            }
+        });
     
         // Create a panel for the remove and modify buttons
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setBackground(Color.WHITE); // Set background color
         buttonsPanel.add(modifyButton); // Add modify button to the panel
         buttonsPanel.add(removeButton); // Add remove button to the panel
-
+        buttonsPanel.add(backButton);
         // Add the buttons panel to the main panel's SOUTH position
         mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
@@ -282,37 +298,37 @@ public class Invite extends JPanel {
         String username = "root";
         String password = "";
         
-        // Liste pour stocker les données des tickets
+        // Liste pour stocker les donnÃ©es des tickets
         List<Object[]> ticketDataList = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            // Créer la requête SQL pour récupérer les données des tickets
+            // CrÃ©er la requÃªte SQL pour rÃ©cupÃ©rer les donnÃ©es des tickets
         	String query = "SELECT  Inviteid, nom , Email , Eventid FROM invite";
         	
-            // Préparer la déclaration SQL
+            // PrÃ©parer la dÃ©claration SQL
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(query)) {
-                // Parcourir les résultats de la requête
+                // Parcourir les rÃ©sultats de la requÃªte
                 while (resultSet.next()) {
                  
                 	int eventid = resultSet.getInt("Eventid");
                     int Inviteid = resultSet.getInt("Inviteid");
                     String name = resultSet.getString("Name");
                     String Email = resultSet.getString("Email");
-                    // Créer un tableau d'objets contenant les valeurs des colonnes
+                    // CrÃ©er un tableau d'objets contenant les valeurs des colonnes
 
                     Object[] rowData = { Inviteid, name, Email,eventid};
                     
-                    // Ajouter le tableau d'objets à la liste
+                    // Ajouter le tableau d'objets Ã  la liste
                     ticketDataList.add(rowData);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gérer les erreurs de connexion ou d'exécution de requête
+            // GÃ©rer les erreurs de connexion ou d'exÃ©cution de requÃªte
         }
         
-        // Convertir la liste en un tableau à deux dimensions pour retourner les données des tickets
+        // Convertir la liste en un tableau Ã  deux dimensions pour retourner les donnÃ©es des tickets
         return ticketDataList.toArray(new Object[0][]);
     }
  // Method to update an invite in the database
@@ -386,10 +402,10 @@ public class Invite extends JPanel {
 
     // Method to filter invites based on search text
     private void filterInvites() {
-    	// Récupérer le texte saisi par l'utilisateur
+    	// RÃ©cupÃ©rer le texte saisi par l'utilisateur
         String Name = searchField.getText().trim().toLowerCase();
 
-        // Récupérer les données depuis la base de données en fonction du Name filtré
+        // RÃ©cupÃ©rer les donnÃ©es depuis la base de donnÃ©es en fonction du Name filtrÃ©
         Object[][] filteredData = getinviteDataFromDatabase();
 
         // Utiliser directement la variable de table au niveau de la classe
@@ -397,7 +413,7 @@ public class Invite extends JPanel {
 
         model.setRowCount(0); // Effacer les lignes existantes
         for (Object[] row : filteredData) {
-            model.addRow(row); // Ajouter les lignes filtrées
+            model.addRow(row); // Ajouter les lignes filtrÃ©es
         
         }
     }

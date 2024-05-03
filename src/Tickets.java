@@ -58,9 +58,10 @@ public class Tickets extends JPanel {
         });
         searchPanel.add(Box.createHorizontalStrut(300)); // Add space between search field and "Add Event" button
 
-     // Create "Add Event" button with icon
-        ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\lenovo\\\\Downloads\\\\plus.png");
-        addButton = new JButton("Add a Ticket");
+        // Create "Add Event" button with icon
+        ImageIcon plusIcon = new ImageIcon("C:\\Users\\lenovo\\Downloads\\plus.png"); // Change to your icon file path
+       
+        addButton = new JButton("Add a Ticket",plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
         addButton.setForeground(new Color(235, 219, 204)); // Set foreground color
@@ -79,7 +80,7 @@ public class Tickets extends JPanel {
 
         String[] columns = {"ID", "EventID", "InviteID", "Price", "Status"};
 
-        // Récupération des données depuis la base de données
+        // RÃ©cupÃ©ration des donnÃ©es depuis la base de donnÃ©es
         Object[][] data = getTicketDataFromDatabase();
         tableModel = new DefaultTableModel(data, columns);
         table = new JTable(tableModel);
@@ -125,6 +126,26 @@ public class Tickets extends JPanel {
                 }
             }
         });
+        
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    String ticketId = (String) table.getValueAt(selectedRow, 0);
+                    String eventId = (String) table.getValueAt(selectedRow, 1);
+                    String inviteId = (String) table.getValueAt(selectedRow, 2);
+                    String price = (String) table.getValueAt(selectedRow, 3);
+                    String status = (String) table.getValueAt(selectedRow, 4);
+
+                    // Create a dialog to modify ticket details
+                    createModifyTicketForm(ticketId, eventId, inviteId, price, status);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a row to modify.");
+                }
+            }
+        });
+
 
         // Create a panel for the remove button
         JPanel buttonsPanel = new JPanel();
@@ -139,37 +160,37 @@ public class Tickets extends JPanel {
 
  // Method to delete a ticket from the database
     private void deleteTicketFromDatabase(String ticketId) {
-        String url = "jdbc:mysql://localhost:3306/events"; // URL de connexion à votre base de données MySQL
-        String username = "root"; // Nom d'utilisateur de la base de données
-        String password = ""; // Mot de passe de la base de données
+        String url = "jdbc:mysql://localhost:3306/events"; // URL de connexion Ã  votre base de donnÃ©es MySQL
+        String username = "root"; // Nom d'utilisateur de la base de donnÃ©es
+        String password = ""; // Mot de passe de la base de donnÃ©es
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            // Créer la requête SQL DELETE
+            // CrÃ©er la requÃªte SQL DELETE
             String query = "DELETE FROM billet WHERE Id = ?";
 
-            // Préparer la déclaration SQL
+            // PrÃ©parer la dÃ©claration SQL
             PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setString(1, ticketId); // Paramètre pour l'ID du ticket à supprimer
+            statement.setString(1, ticketId); // ParamÃ¨tre pour l'ID du ticket Ã  supprimer
 
-            // Exécuter la requête de suppression
+            // ExÃ©cuter la requÃªte de suppression
             int rowsDeleted = statement.executeUpdate();
 
-            // Vérifier si la suppression a été réussie
+            // VÃ©rifier si la suppression a Ã©tÃ© rÃ©ussie
             if (rowsDeleted > 0) {
                 System.out.println("Ticket deleted successfully!");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            // Gérer les erreurs d'exécution de la requête ou de connexion
+            // GÃ©rer les erreurs d'exÃ©cution de la requÃªte ou de connexion
         }
     }
 
     private void filterTickets() {
-        // Récupérer le texte saisi par l'utilisateur
+        // RÃ©cupÃ©rer le texte saisi par l'utilisateur
         String lieu = searchField.getText().trim().toLowerCase();
 
-        // Récupérer les données depuis la base de données en fonction du lieu filtré
+        // RÃ©cupÃ©rer les donnÃ©es depuis la base de donnÃ©es en fonction du lieu filtrÃ©
         Object[][] filteredData = getTicketDataFromDatabase();
 
         // Utiliser directement la variable de table au niveau de la classe
@@ -177,7 +198,7 @@ public class Tickets extends JPanel {
 
         model.setRowCount(0); // Effacer les lignes existantes
         for (Object[] row : filteredData) {
-            model.addRow(row); // Ajouter les lignes filtrées
+            model.addRow(row); // Ajouter les lignes filtrÃ©es
         }
     }
  // Method to retrieve ticket data from the database
@@ -186,38 +207,38 @@ public class Tickets extends JPanel {
         String username = "root";
         String password = "";
         
-        // Liste pour stocker les données des tickets
+        // Liste pour stocker les donnÃ©es des tickets
         List<Object[]> ticketDataList = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            // Créer la requête SQL pour récupérer les données des tickets
-        	String query = "SELECT ID, EventID, InviteID, Prix, Status FROM billet";
+            // CrÃ©er la requÃªte SQL pour rÃ©cupÃ©rer les donnÃ©es des tickets
+        	String query = "SELECT ID, EventID, InviteID, Price, Status FROM billet";
         	
-            // Préparer la déclaration SQL
+            // PrÃ©parer la dÃ©claration SQL
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(query)) {
-                // Parcourir les résultats de la requête
+                // Parcourir les rÃ©sultats de la requÃªte
                 while (resultSet.next()) {
-                    // Récupérer les valeurs des colonnes pour chaque ligne
+                    // RÃ©cupÃ©rer les valeurs des colonnes pour chaque ligne
                 	String id = resultSet.getString("ID");
                     String eventId = resultSet.getString("EventID");
                     String inviteId = resultSet.getString("InviteID");
-                    String price = resultSet.getString("Prix");
+                    String price = resultSet.getString("Price");
                     String status = resultSet.getString("Status");
-                    // Créer un tableau d'objets contenant les valeurs des colonnes
+                    // CrÃ©er un tableau d'objets contenant les valeurs des colonnes
 
                     Object[] rowData = {id, eventId, inviteId, price, status};
                     
-                    // Ajouter le tableau d'objets à la liste
+                    // Ajouter le tableau d'objets Ã  la liste
                     ticketDataList.add(rowData);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gérer les erreurs de connexion ou d'exécution de requête
+            // GÃ©rer les erreurs de connexion ou d'exÃ©cution de requÃªte
         }
         
-        // Convertir la liste en un tableau à deux dimensions pour retourner les données des tickets
+        // Convertir la liste en un tableau Ã  deux dimensions pour retourner les donnÃ©es des tickets
         return ticketDataList.toArray(new Object[0][]);
     }
 
@@ -268,26 +289,46 @@ public class Tickets extends JPanel {
 
  // Method to create and display the add ticket form
     private void createAddTicketForm() {
-        // Obtenir le JFrame parent
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // Créer un JDialog avec le JFrame parent
         JDialog addTicketDialog = new JDialog(parentFrame, "Add Ticket", true);
         addTicketDialog.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        // Create text fields for entering ticket data
-        JTextField ticketIdField = new JTextField(); // New text field for manual entry of ticket ID
+        addTicketDialog.getContentPane().setBackground(Color.white); // White background
+        addTicketDialog.getContentPane().setForeground(Color.black); // Black text
+        addTicketDialog.setFont(new Font("Arial", Font.PLAIN, 18)); // Same font as main panel
+
+        // Create and customize the title label
+        JLabel titleLabel = createLabel("Add Ticket", new Color(60, 165, 92));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        addTicketDialog.add(titleLabel, gbc);
+
+        // Create text fields with the same style as the addition form
+        JTextField ticketIdField = new JTextField();
         JTextField eventIdField = new JTextField();
         JTextField inviteIdField = new JTextField();
         JTextField statusField = new JTextField();
         JTextField priceField = new JTextField();
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        addFieldWithLabel(gbc, addTicketDialog, "Ticket ID:", ticketIdField); // Add label and text field for ticket ID
+        // Apply the same text field style as the addition form
+        setTextFieldStyle(ticketIdField, "Enter Ticket ID...");
+        setTextFieldStyle(eventIdField, "Enter Event ID...");
+        setTextFieldStyle(inviteIdField, "Enter Invite ID...");
+        setTextFieldStyle(statusField, "Enter Status...");
+        setTextFieldStyle(priceField, "Enter Price...");
+
+        // Add fields with labels
+        gbc.gridwidth = 1; // Reset grid width
+        gbc.anchor = GridBagConstraints.EAST;
+
+        gbc.gridy++;
+        addFieldWithLabel(gbc, addTicketDialog, "Ticket ID:", ticketIdField);
         gbc.gridy++;
         addFieldWithLabel(gbc, addTicketDialog, "Event ID:", eventIdField);
         gbc.gridy++;
@@ -298,13 +339,14 @@ public class Tickets extends JPanel {
         addFieldWithLabel(gbc, addTicketDialog, "Price:", priceField);
         gbc.gridy++;
 
-        // Create the "Save" button to add the ticket to the table and database
+        // Create the "Save" button
         JButton saveButton = new JButton("Save");
         saveButton.setBackground(new Color(60, 165, 92)); // Green background
         saveButton.setForeground(new Color(235, 219, 204)); // White text
         saveButton.setFocusPainted(false); // Remove focus border
         saveButton.setFont(new Font("Arial", Font.BOLD, 16)); // Same font as main panel
         gbc.gridx = 0;
+        gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         addTicketDialog.add(saveButton, gbc);
@@ -313,26 +355,181 @@ public class Tickets extends JPanel {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Retrieve the data entered in the text fields
-                String ticketId = ticketIdField.getText(); // Retrieve manually entered ticket ID
+                String ticketId = ticketIdField.getText();
                 String eventId = eventIdField.getText();
                 String inviteId = inviteIdField.getText();
                 String status = statusField.getText();
                 String price = priceField.getText();
 
-                // Add the ticket to the table and database
                 addTicketToDatabase(ticketId, eventId, inviteId, status, price);
-
-                // Close the dialog after adding the ticket
                 addTicketDialog.dispose();
             }
         });
 
         // Set dialog properties
-        addTicketDialog.setSize(400, 300);
+        addTicketDialog.setSize(400, 400);
         addTicketDialog.setLocationRelativeTo(this);
         addTicketDialog.setVisible(true);
     }
+
+    private void createModifyTicketForm(String ticketId, String eventId, String inviteId, String price, String status) {
+        JDialog modifyDialog = new JDialog();
+        modifyDialog.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        modifyDialog.getContentPane().setBackground(Color.white); // White background
+        modifyDialog.getContentPane().setForeground(Color.black); // Black text
+        modifyDialog.setFont(new Font("Arial", Font.PLAIN, 18)); // Same font as main panel
+
+        // Create and customize the title label
+        JLabel titleLabel1 = createLabel("Modify Ticket", new Color(60, 165, 92));
+        titleLabel1.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        modifyDialog.add(titleLabel1, gbc);
+
+        // Create text fields with the same style as the addition form
+        JTextField eventIdField = new JTextField();
+        JTextField inviteIdField = new JTextField();
+        JTextField priceField = new JTextField();
+        JTextField statusField = new JTextField();
+
+        // Apply the same text field style as the addition form
+        setTextFieldStyle(eventIdField, "Enter Event ID...");
+        setTextFieldStyle(inviteIdField, "Enter Invite ID...");
+        setTextFieldStyle(priceField, "Enter Price...");
+        setTextFieldStyle(statusField, "Enter Status...");
+
+        // Set the text of the text fields to the provided values
+        eventIdField.setText(eventId);
+        inviteIdField.setText(inviteId);
+        priceField.setText(price);
+        statusField.setText(status);
+
+        // Add fields with labels
+        gbc.gridwidth = 1; // Reset grid width
+        gbc.anchor = GridBagConstraints.EAST;
+
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Event ID:", eventIdField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Invite ID:", inviteIdField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Price:", priceField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Status:", statusField);
+
+        // Create the "Save" button
+        JButton saveButton = new JButton("Save Changes");
+        saveButton.setBackground(new Color(60, 165, 92)); // Green background
+        saveButton.setForeground(new Color(235, 219, 204)); // White text
+        saveButton.setFocusPainted(false); // Remove focus border
+        saveButton.setFont(new Font("Arial", Font.BOLD, 16)); // Same font as main panel
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        modifyDialog.add(saveButton, gbc);
+
+        // Add action listener to the "Save" button
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get modified data from the fields
+                String newEventId = eventIdField.getText();
+                String newInviteId = inviteIdField.getText();
+                String newPrice = priceField.getText();
+                String newStatus = statusField.getText();
+
+                // Get the selected row index
+                int selectedRow = table.getSelectedRow();
+
+                if (selectedRow != -1) {
+                    // Update the table model with the modified data
+                    tableModel.setValueAt(newEventId, selectedRow, 1);
+                    tableModel.setValueAt(newInviteId, selectedRow, 2);
+                    tableModel.setValueAt(newPrice, selectedRow, 3);
+                    tableModel.setValueAt(newStatus, selectedRow, 4);
+
+                    // Update the ticket in the database
+                    updateTicketInDatabase(ticketId, newEventId, newInviteId, newPrice, newStatus);
+
+                    // Close the dialog after saving changes
+                    modifyDialog.dispose();
+                }
+            }
+        });
+        // Set dialog properties
+        modifyDialog.setSize(400, 300);
+        modifyDialog.setLocationRelativeTo(this);
+        modifyDialog.setVisible(true);
+    }
+    private JLabel createLabel(String text, Color color) {
+        JLabel label = new JLabel(text);
+        label.setForeground(color);
+        return label;
+    }
+
+    private void setTextFieldStyle(JTextField textField, String placeholder) {
+        textField.setFont(new Font("Arial", Font.BOLD, 14)); // Set font and size
+        textField.setText(placeholder);
+        textField.setForeground(new Color(128, 128, 128)); // Set placeholder color
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 165, 92), 2), // Set border color and thickness
+            BorderFactory.createEmptyBorder(5, 10, 5, 10) // Set padding
+        ));
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(placeholder)) {
+                    textField.setText("");
+                    textField.setForeground(Color.black); // Set regular text color
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setText(placeholder);
+                    textField.setForeground(new Color(235, 219, 204)); // Set placeholder color
+                }
+            }
+        });
+        
+    }
+ // Method to update a ticket in the database
+    private void updateTicketInDatabase(String ticketId, String eventId, String inviteId, String status, String price) {
+        String url = "jdbc:mysql://localhost:3306/events";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            // Create the SQL UPDATE query
+            String query = "UPDATE billet SET EventID = ?, InviteID = ?, Price = ?, Status = ? WHERE ID = ?";
+
+            // Prepare the SQL statement
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, eventId);
+            statement.setString(2, inviteId);
+            statement.setString(3, price);
+            statement.setString(4, status);
+            statement.setString(5, ticketId);
+
+            // Execute the UPDATE query
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Ticket updated successfully!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // Handle SQL exceptions
+        }
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {

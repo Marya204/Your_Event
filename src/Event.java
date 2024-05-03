@@ -15,7 +15,7 @@ import java.util.List;
 
 
 
-public class Event extends JFrame {
+public class Event extends JPanel {
   
     private JDialog addEventDialog;
     private JPanel mainPanel;
@@ -26,16 +26,13 @@ public class Event extends JFrame {
 
 
     public Event() {
-        setTitle("Event Management");
+    	setLayout(new BorderLayout());
         setSize(1100, 700);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        getContentPane().setLayout(new BorderLayout());
-       
         // Main panel
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for vertical layout
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
-
+        // Add a marge in the top of the page
+        mainPanel.add(Box.createVerticalStrut(20));
         // Add title "Événements" to the main panel
         JLabel titleLabelEvents = new JLabel("EVENTS ", JLabel.CENTER);
         titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
@@ -49,14 +46,11 @@ public class Event extends JFrame {
 
      // Create the search field with placeholder text
         searchField = new PlaceholderTextField("Search for an event");
-
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(200, 40));
-        searchField.setBorder(BorderFactory.createLineBorder(new Color(60, 165, 92))); // Set border color
-        searchField.setBackground(Color.WHITE); // Set background color
-        searchField.setForeground(Color.BLACK); // Set foreground color
-
-        
+        searchField.setBorder(BorderFactory.createLineBorder(new Color(60, 165, 92)));
+        searchField.setBackground(Color.WHITE);
+        searchField.setForeground(Color.WHITE);
         // Add the search field to the search panel
         searchPanel.add(searchField);
      // Ajouter un écouteur sur le champ de recherche
@@ -80,7 +74,7 @@ public class Event extends JFrame {
 
         
      // Create "Add Event" button with icon
-        ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\hp\\\\Downloads\\Image \\Image\\plus.png"); // Change "path_to_your_icon_file.png" to the actual path of your icon file
+        ImageIcon plusIcon = new ImageIcon("C:\\\\Users\\\\hp\\\\Downloads\\\\Image\\\\Image\\\\plus.png"); // Change "path_to_your_icon_file.png" to the actual path of your icon file
         JButton addButton = new JButton("Add an event", plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
@@ -180,8 +174,8 @@ public class Event extends JFrame {
         
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(200, 40));
-        backButton.setBackground(new Color(60, 165, 92)); // Green background
-        backButton.setForeground(new Color(235, 219, 204)); // White text
+        backButton.setBackground(new Color(255,255,255)); // Green background
+        backButton.setForeground(new Color(0,0,0)); // White text
         backButton.setFocusPainted(false); // Remove focus border
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -225,7 +219,7 @@ public class Event extends JFrame {
     }
     
     private void openModifyEventDialog(String eventId, String title, String description, String date, String location, String type, String status, String price, String capacity) {
-        JDialog modifyDialog = new JDialog(this, "Modify Event", true);
+    	JDialog modifyDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Modify Event", true);
         modifyDialog.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -500,7 +494,7 @@ public class Event extends JFrame {
   
 
     private void createAddEventForm() {
-        addEventDialog = new JDialog(this, "ADD EVENT", true);
+    	addEventDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "ADD EVENT", true);
         addEventDialog.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -758,9 +752,17 @@ public class Event extends JFrame {
     }
     
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
+    	SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new Event();
+                JFrame frame = new JFrame("Tickets Management");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                Event eventContentPanel = new Event();
+                frame.add(eventContentPanel);
+
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
             }
         });
     }

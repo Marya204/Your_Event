@@ -107,8 +107,6 @@ public class Event extends JPanel {
         table = new JTable(data, columns);
         this.tableModel = new DefaultTableModel(data, columns);
         this.table = new JTable(this.tableModel);
-     
-
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 14));
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
@@ -175,8 +173,8 @@ public class Event extends JPanel {
         
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(200, 40));
-        backButton.setBackground(new Color(255,255,255)); // Green background
-        backButton.setForeground(new Color(0,0,0)); // White text
+        backButton.setBackground(new Color(60, 165, 92)); // Green background
+        backButton.setForeground(new Color(255,255,255)); // White text
         backButton.setFocusPainted(false); // Remove focus border
         backButton.addActionListener(new ActionListener() {
             @Override

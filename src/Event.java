@@ -142,7 +142,7 @@ public class Event extends JPanel {
                     String capacity = (String) table.getValueAt(selectedRow, 8);
                     
                     // Open modification dialog with pre-filled data
-                    openModifyEventDialog(eventId, title, description, date, location, type, status, price, capacity);
+                    createModifyEventForm(eventId, title, description, date, location, type, status, price, capacity);
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select a row to modify.");
                 }
@@ -218,100 +218,93 @@ public class Event extends JPanel {
         setVisible(true);
     }
     
-    private void openModifyEventDialog(String eventId, String title, String description, String date, String location, String type, String status, String price, String capacity) {
-    	JDialog modifyDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Modify Event", true);
+    private void createModifyEventForm(String eventId, String title, String description, String date, String location, String type, String status, String price, String capacity) {
+        JDialog modifyDialog = new JDialog();
         modifyDialog.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        modifyDialog.getContentPane().setBackground(Color.white); // White background
+        modifyDialog.getContentPane().setForeground(Color.black); // Black text
+        modifyDialog.setFont(new Font("Arial", Font.PLAIN, 18)); // Same font as main panel
 
-        // Create title label and text field
+        // Create and customize the title label
+        JLabel titleLabel1 = createLabel("Modify Event", new Color(60, 165, 92));
+        titleLabel1.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        modifyDialog.add(new JLabel("Title:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        modifyDialog.add(new JTextField(title), gbc);
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        modifyDialog.add(titleLabel1, gbc);
+        // Create text fields with the same style as the addition form
+        JTextField titleField = new JTextField();
+        JTextField descriptionField = new JTextField();
+        JTextField dateField = new JTextField();
+        JTextField locationField = new JTextField();
+        JTextField typeField = new JTextField();
+        JTextField statusField = new JTextField();
+        JTextField priceField = new JTextField();
+        JTextField capacityField = new JTextField();
 
-        // Create description label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        modifyDialog.add(new JLabel("Description:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        modifyDialog.add(new JTextField(description), gbc);
 
-        // Create date label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        modifyDialog.add(new JLabel("Date:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        modifyDialog.add(new JTextField(date), gbc);
+        // Apply the same text field style as the addition form
+       
+     // Apply the same text field style as the addition form
+        setTextFieldStyle(titleField, "Enter title..."); // Définir une largeur préférée de 300 pixels
+        setTextFieldStyle(descriptionField, "Enter description...");
+        setTextFieldStyle(dateField, "Enter date...");
+        setTextFieldStyle(locationField, "Enter location...");
+        setTextFieldStyle(typeField, "Enter type...");
+        setTextFieldStyle(statusField, "Enter status...");
+        setTextFieldStyle(priceField, "Enter price...");
+        setTextFieldStyle(capacityField, "Enter capacity...");
 
-        // Create location label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 3;
-        modifyDialog.add(new JLabel("Location:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.gridwidth = 3;
-        modifyDialog.add(new JTextField(location), gbc);
-        // Create type label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 4;
-        modifyDialog.add(new JLabel("Type:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        gbc.gridwidth = 4;
-        modifyDialog.add(new JTextField(type), gbc);
-        // Create status label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 5;
-        modifyDialog.add(new JLabel("Status:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 5;
-        gbc.gridwidth = 5;
-        modifyDialog.add(new JTextField(status), gbc);
-        // Create price label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 6;
-        modifyDialog.add(new JLabel("Price:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        gbc.gridwidth = 6;
-        modifyDialog.add(new JTextField(price), gbc);
+
+
+
+        // Set the text of the text fields to the provided values
+        titleField.setText(title);
+        descriptionField.setText(description);
+        dateField.setText(date);
+        locationField.setText(location);
+        typeField.setText(type);
+        statusField.setText(status);
+        priceField.setText(price);
+        capacityField.setText(capacity);
+      
+
+        // Add fields with labels
+        gbc.gridwidth = 1;// Reset grid width
+       
+        gbc.anchor = GridBagConstraints.EAST;
+
+       
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Title:", titleField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Description:", descriptionField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Date:", dateField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Location:", locationField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Type:", typeField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Status:", statusField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Price:", priceField);
+        gbc.gridy++;
+        addFieldWithLabel(gbc, modifyDialog, "Capcity:", capacityField);
         
-        // Create capacity label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 7;
-        modifyDialog.add(new JLabel("Capacity:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 7;
-        gbc.gridwidth = 7;
-        modifyDialog.add(new JTextField(capacity), gbc);
-        // Repeat for other fields...
-
         // Create the "Save" button
-        JButton saveButton = new JButton("Save");
+        JButton saveButton = new JButton("Save Changes");
         saveButton.setBackground(new Color(60, 165, 92)); // Green background
         saveButton.setForeground(new Color(235, 219, 204)); // White text
         saveButton.setFocusPainted(false); // Remove focus border
         saveButton.setFont(new Font("Arial", Font.BOLD, 16)); // Same font as main panel
         gbc.gridx = 0;
         gbc.gridy++;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         modifyDialog.add(saveButton, gbc);
 
@@ -320,25 +313,34 @@ public class Event extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get modified data from the fields
-                String newTitle = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(1)).getComponent(1)).getText();
-                String newDescription = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(2)).getComponent(1)).getText();
-                String newDate = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(3)).getComponent(1)).getText();
-                String newLocation= ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(4)).getComponent(1)).getText();
-                String newType = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(5)).getComponent(1)).getText();
-                String newStatus = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(6)).getComponent(1)).getText();
-                String newPrice = ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(7)).getComponent(1)).getText();
-                String newCapacity= ((JTextField) ((Container) modifyDialog.getContentPane().getComponent(8)).getComponent(1)).getText();
-                // Update event data in the table
+                String newTitle = titleField.getText();
+                String newDescription = descriptionField.getText();
+                String newDate = dateField.getText();
+                String newLocation = locationField.getText();
+                String newType =typeField.getText();
+                String newStatus = statusField.getText();
+                String newPrice = priceField.getText();
+                String newCapcity = capacityField.getText();
+
+                // Get the selected row index
                 int selectedRow = table.getSelectedRow();
-                table.setValueAt(newTitle, selectedRow, 1);
-                table.setValueAt(newDescription, selectedRow, 2);
-                // Repeat for other fields...
 
-                // Update event data in the database
-                updateEventInDatabase(eventId, newTitle, newDescription,newDate,newLocation,newType,newStatus,newPrice,newCapacity);
+                if (selectedRow != -1) {
+                    // Update the table model with the modified data
+                    tableModel.setValueAt(newTitle, selectedRow, 1);
+                    tableModel.setValueAt(newDescription, selectedRow, 2);
+                    tableModel.setValueAt(newDate, selectedRow, 3);
+                    tableModel.setValueAt(newLocation, selectedRow, 4);
+                    tableModel.setValueAt(newType, selectedRow, 5);
+                    tableModel.setValueAt(newPrice, selectedRow, 6);
+                    tableModel.setValueAt(newStatus, selectedRow, 7);
+                    tableModel.setValueAt( newCapcity, selectedRow, 8);
+                    // Update the ticket in the database
+                    updateEventInDatabase(eventId,newTitle, newDescription,newDate,newLocation,newType,newStatus,newPrice, newCapcity);
 
-                // Close the modification dialog
-                modifyDialog.dispose();
+                    // Close the dialog after saving changes
+                    modifyDialog.dispose();
+                }
             }
         });
 
@@ -349,14 +351,17 @@ public class Event extends JPanel {
     }
 
     // Helper method to add a field with label to the modification dialog
-    private void addFieldWithLabel(GridBagConstraints gbc, Container container, String labelText, JTextField textField) {
+    private void addFieldWithLabel(GridBagConstraints gbc, JDialog dialog, String labelText, JTextField textField) {
         JLabel label = createLabel(labelText, Color.black);
-        label.setFont(new Font("Arial", Font.PLAIN, 16));
-        container.add(label, gbc);
-        gbc.gridx++;
-        container.add(textField, gbc);
         gbc.gridx = 0;
-        gbc.gridy++;
+        gbc.weightx = 0.2;
+        gbc.anchor = GridBagConstraints.WEST;
+        dialog.add(label, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 0.8;
+        gbc.anchor = GridBagConstraints.EAST;
+        dialog.add(textField, gbc);
     }
 
     // Method to update event data in the database
@@ -388,12 +393,41 @@ public class Event extends JPanel {
             e.printStackTrace();
         }
     }
-
+ 
+    
     // Helper method to create a JLabel with specified text and color
     private JLabel createLabel(String text, Color color) {
         JLabel label = new JLabel(text);
         label.setForeground(color);
         return label;
+    }
+    
+    private void setTextFieldStyle(JTextField textField, String placeholder) {
+        textField.setFont(new Font("Arial", Font.BOLD, 14)); // Set font and size
+        textField.setText(placeholder);
+        textField.setForeground(new Color(128, 128, 128)); // Set placeholder color
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 165, 92), 2), // Set border color and thickness
+            BorderFactory.createEmptyBorder(5, 10, 5, 10) // Set padding
+        ));
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(placeholder)) {
+                    textField.setText("");
+                    textField.setForeground(Color.black); // Set regular text color
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setText(placeholder);
+                    textField.setForeground(new Color(235, 219, 204)); // Set placeholder color
+                }
+            }
+        });
+        
     }
 	private void deleteEventFromDatabase(String eventId) {
         String url = "jdbc:mysql://localhost:3306/events";
@@ -464,33 +498,7 @@ public class Event extends JPanel {
         }
     }
    
-    private void setTextFieldStyle(JTextField textField, String placeholder) {
-        textField.setFont(new Font("Arial", Font.BOLD, 14)); // Set font and size
-        textField.setText(placeholder);
-        textField.setForeground(new Color(128, 128, 128)); // Set placeholder color
-        textField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 165, 92), 2), // Set border color and thickness
-            BorderFactory.createEmptyBorder(5, 10, 5, 10) // Set padding
-        ));
-        textField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textField.getText().equals(placeholder)) {
-                    textField.setText("");
-                    textField.setForeground(Color.black); // Set regular text color
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textField.getText().isEmpty()) {
-                    textField.setText(placeholder);
-                    textField.setForeground(new Color(235, 219, 204)); // Set placeholder color
-                }
-            }
-        });
-        
-    }
+    
   
 
     private void createAddEventForm() {
@@ -515,63 +523,65 @@ public class Event extends JPanel {
         addEventDialog.add(titleLabel, gbc);
 
         // Create text fields with white background and black text
-        JTextField titreField = new JTextField();
+        JTextField titleField = new JTextField();
         JTextField descriptionField = new JTextField();
         JTextField dateField = new JTextField();
-        JTextField lieuField = new JTextField();
+        JTextField locationField = new JTextField();
         JTextField typeField = new JTextField();
-        JTextField StatusField = new JTextField();
-        JTextField prixField = new JTextField();
-        JTextField capaciteField = new JTextField();
+        JTextField statusField = new JTextField();
+        JTextField priceField = new JTextField();
+        JTextField capacityField = new JTextField();
 
         // Call setTextFieldStyle for each text field
-        setTextFieldStyle(titreField, "Enter title...");
+
+        setTextFieldStyle(titleField, "Enter title..."); // Définir une largeur préférée de 300 pixels
         setTextFieldStyle(descriptionField, "Enter description...");
         setTextFieldStyle(dateField, "Enter date...");
-        setTextFieldStyle(lieuField, "Enter location...");
+        setTextFieldStyle(locationField, "Enter location...");
         setTextFieldStyle(typeField, "Enter type...");
-        setTextFieldStyle(StatusField, "Enter status...");
-        setTextFieldStyle(prixField, "Enter price...");
-        setTextFieldStyle(capaciteField, "Enter capacity...");
+        setTextFieldStyle(statusField, "Enter status...");
+        setTextFieldStyle(priceField, "Enter price...");
+        setTextFieldStyle(capacityField, "Enter capacity...");
+      
 
         // Apply the same background and foreground colors as the main panel
-        titreField.setBackground(Color.WHITE);
-        titreField.setForeground(Color.BLACK);
+        titleField.setBackground(Color.WHITE);
+        titleField.setForeground(Color.BLACK);
         descriptionField.setBackground(Color.WHITE);
         descriptionField.setForeground(Color.BLACK);
         dateField.setBackground(Color.WHITE);
         dateField.setForeground(Color.BLACK);
-        lieuField.setBackground(Color.WHITE);
-        lieuField.setForeground(Color.BLACK);
+        locationField.setBackground(Color.WHITE);
+        locationField.setForeground(Color.BLACK);
         typeField.setBackground(Color.WHITE);
         typeField.setForeground(Color.BLACK);
-        StatusField.setBackground(Color.WHITE);
-        StatusField.setForeground(Color.BLACK);
-        prixField.setBackground(Color.WHITE);
-        prixField.setForeground(Color.BLACK);
-        capaciteField.setBackground(Color.WHITE);
-        capaciteField.setForeground(Color.BLACK);
+        statusField.setBackground(Color.WHITE);
+        statusField.setForeground(Color.BLACK);
+        priceField.setBackground(Color.WHITE);
+        priceField.setForeground(Color.BLACK);
+        capacityField.setBackground(Color.WHITE);
+        capacityField.setForeground(Color.BLACK);
 
         // Add fields with labels
         gbc.gridwidth = 1; // Reset grid width
         gbc.anchor = GridBagConstraints.EAST;
 
         gbc.gridy++;
-        addFieldWithLabel(gbc, addEventDialog, "Title:", titreField);
+        addFieldWithLabel(gbc, addEventDialog, "Title:", titleField);
         gbc.gridy++;
         addFieldWithLabel(gbc, addEventDialog, "Description:", descriptionField);
         gbc.gridy++;
         addFieldWithLabel(gbc, addEventDialog, "Date:", dateField);
         gbc.gridy++;
-        addFieldWithLabel(gbc, addEventDialog, "Location:", lieuField);
+        addFieldWithLabel(gbc, addEventDialog, "Location:", locationField);
         gbc.gridy++;
         addFieldWithLabel(gbc, addEventDialog, "Type:", typeField);
         gbc.gridy++;
-        addFieldWithLabel(gbc, addEventDialog, "Status:", StatusField);
+        addFieldWithLabel(gbc, addEventDialog, "Status:", statusField);
         gbc.gridy++;
-        addFieldWithLabel(gbc, addEventDialog, "Price:", prixField);
+        addFieldWithLabel(gbc, addEventDialog, "Price:", priceField);
         gbc.gridy++;
-        addFieldWithLabel(gbc, addEventDialog, "Capacity:", capaciteField);
+        addFieldWithLabel(gbc, addEventDialog, "Capacity:", capacityField);
 
         // Add a button to validate the event addition
         JButton addButton = new JButton("Add");
@@ -590,14 +600,14 @@ public class Event extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get the data entered in the form
-                String titre = titreField.getText();
+                String titre = titleField.getText();
                 String description = descriptionField.getText();
                 String date = dateField.getText();
-                String lieu = lieuField.getText();
+                String lieu = locationField.getText();
                 String type = typeField.getText();
-                String Status = StatusField.getText();
-                String prix = prixField.getText();
-                String capacite = capaciteField.getText();
+                String Status = statusField.getText();
+                String prix = priceField.getText();
+                String capacite = capacityField.getText();
 
                 // Add the event to the database
                 addEventToDatabase(titre, description, date, lieu, type, Status, prix, capacite);

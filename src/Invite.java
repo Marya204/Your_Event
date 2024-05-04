@@ -2,6 +2,9 @@ package Projet;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import Projet.Event;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +46,7 @@ public class Invite extends JPanel {
         searchPanel.setBackground(new Color(235, 235, 235)); // Set background color
 
         // Create the search field with placeholder text
-        searchField = new JTextField("Search for a guest");
+        searchField = new PlaceholderTextField("Search for a guest");
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(200, 40));
         searchField.setBorder(BorderFactory.createLineBorder(new Color(60, 165, 92))); // Set border color
@@ -160,7 +163,8 @@ public class Invite extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               
+            	Window window = SwingUtilities.getWindowAncestor(Invite.this);
+                window.dispose();
                Dashboard dashboard = new Dashboard();
                 dashboard.setVisible(true);
             }
@@ -179,7 +183,7 @@ public class Invite extends JPanel {
     }
     private void openModifyInviteForm(int Inviteid,String Name,String Email,int Eventid) {
         JDialog modifyDialog = new JDialog();
-        modifyDialog.setLayout(new GridBagLayout());
+        modifyDialog.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -194,7 +198,7 @@ public class Invite extends JPanel {
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
         gbc.anchor = GridBagConstraints.CENTER;
-        modifyDialog.add(titleLabel, gbc);
+        modifyDialog.getContentPane().add(titleLabel, gbc);
 
         // Create text fields with the same style as the addition form
         JTextField nameTextField = new JTextField();
@@ -232,7 +236,7 @@ public class Invite extends JPanel {
         gbc.gridy++;
         gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.CENTER;
-        modifyDialog.add(saveButton, gbc);
+        modifyDialog.getContentPane().add(saveButton, gbc);
 
         // Add action listener to the "Save" button
         saveButton.addActionListener(new ActionListener() {
@@ -303,7 +307,7 @@ public class Invite extends JPanel {
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             // Créer la requête SQL pour récupérer les données des tickets
-        	String query = "SELECT  Inviteid, name , Email , Eventid FROM invite";
+        	String query = "SELECT  * FROM invite";
         	
             // Préparer la déclaration SQL
             try (Statement statement = connection.createStatement();
@@ -392,12 +396,12 @@ public class Invite extends JPanel {
         gbc.gridy++;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.WEST;
-        dialog.add(label, gbc);
+        dialog.getContentPane().add(label, gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 0.8;
         gbc.anchor = GridBagConstraints.EAST;
-        dialog.add(textField, gbc);
+        dialog.getContentPane().add(textField, gbc);
     }
 
     // Method to filter invites based on search text
@@ -406,7 +410,7 @@ public class Invite extends JPanel {
         String Name = searchField.getText().trim().toLowerCase();
 
         // Récupérer les données depuis la base de données en fonction du Name filtré
-        Object[][] filteredData = getinviteDataFromDatabase();
+        Object[][] filteredData = getinviteDataFromDatabase(Name);
 
         // Utiliser directement la variable de table au niveau de la classe
         DefaultTableModel model = (DefaultTableModel) this.table.getModel();
@@ -417,11 +421,57 @@ public class Invite extends JPanel {
         
         }
     }
+    private Object[][] getinviteDataFromDatabase(String name) {
+        // Connexion à votre base de données et exécution de la requête SQL pour récupérer les données
+        String url = "jdbc:mysql://localhost:3306/events";
+        String username = "root";
+        String password = "";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            String query = "SELECT * FROM invite";
+            
+            // Ajout de la clause WHERE si un statut est spécifié
+            if (name != null && !name.isEmpty()) {
+                query += " WHERE Name LIKE ?";
+            }
+            
+            PreparedStatement statement = connection.prepareStatement(query);
+            
+            // Si un statut est spécifié, définissez le paramètre dans la requête
+            if (name != null && !name.isEmpty()) {
+                statement.setString(1, name + "%");
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // Traitement des résultats et création des données filtrées
+            List<Object[]> ticketData = new ArrayList<>();
+            while (resultSet.next()) {
+                Object[] row = new Object[4];
+                row[0] = resultSet.getString("Inviteid");
+                row[1] = resultSet.getString("Name");
+                row[2] = resultSet.getString("Email");
+                row[3] = resultSet.getString("Eventid"); // Utilisez l'indice 4 pour le statut
+                ticketData.add(row);
+            }
+
+            // Conversion de la liste en tableau à deux dimensions
+            Object[][] data = new Object[ticketData.size()][];
+            for (int i = 0; i < ticketData.size(); i++) {
+                data[i] = ticketData.get(i);
+            }
+
+            return data;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Object[0][0];
+        }
+    }
 
     private void createModifyInviteForm(int Inviteid, String name, String email, int eventid) {
         // Create a modal dialog for the modify invite form
         JDialog modifyInviteDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Modify Invite", true);
-        modifyInviteDialog.setLayout(new GridBagLayout());
+        modifyInviteDialog.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -436,7 +486,7 @@ public class Invite extends JPanel {
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
         gbc.anchor = GridBagConstraints.CENTER;
-        modifyInviteDialog.add(titleLabel, gbc);
+        modifyInviteDialog.getContentPane().add(titleLabel, gbc);
 
         // Create text fields for entering modified invite data
         JTextField nameTextField = new JTextField();
@@ -474,7 +524,7 @@ public class Invite extends JPanel {
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        modifyInviteDialog.add(saveButton, gbc);
+        modifyInviteDialog.getContentPane().add(saveButton, gbc);
 
         // Add action listener to the "Save" button
         saveButton.addActionListener(new ActionListener() {
@@ -507,7 +557,7 @@ public class Invite extends JPanel {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
         JDialog addInviteDialog = new JDialog(parentFrame, "Add Invite", true);
-        addInviteDialog.setLayout(new GridBagLayout());
+        addInviteDialog.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -522,7 +572,7 @@ public class Invite extends JPanel {
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
         gbc.anchor = GridBagConstraints.CENTER;
-        addInviteDialog.add(titleLabel, gbc);
+        addInviteDialog.getContentPane().add(titleLabel, gbc);
 
         // Create text fields with the same style as the addition form
         JTextField nameTextField = new JTextField();
@@ -555,7 +605,7 @@ public class Invite extends JPanel {
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        addInviteDialog.add(saveButton, gbc);
+        addInviteDialog.getContentPane().add(saveButton, gbc);
 
         // Add action listener to the "Save" button
         saveButton.addActionListener(new ActionListener() {
@@ -615,7 +665,7 @@ public class Invite extends JPanel {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 Invite inviteContentPanel = new Invite();
-                frame.add(inviteContentPanel);
+                frame.getContentPane().add(inviteContentPanel);
 
                 frame.pack();
                 frame.setLocationRelativeTo(null);

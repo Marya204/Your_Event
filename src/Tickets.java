@@ -1,4 +1,5 @@
 package Projet;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -20,13 +21,12 @@ public class Tickets extends JPanel {
         setLayout(new BorderLayout());
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        add(mainPanel);
-
+        
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Utiliser un BoxLayout vertical
         // Add a marge in the top of the page
         mainPanel.add(Box.createVerticalStrut(20));
         // Add title "Tickets" to the main panel
-        JLabel titleLabelEvents = new JLabel("Tickets", JLabel.CENTER);
+        JLabel titleLabelEvents = new JLabel("TICKETS", JLabel.CENTER);
         titleLabelEvents.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabelEvents.setForeground(new Color(60, 165, 92));
         mainPanel.add(titleLabelEvents, BorderLayout.NORTH);
@@ -37,7 +37,8 @@ public class Tickets extends JPanel {
         searchPanel.setBackground(new Color(235, 235, 235));
 
         // Create the search field with placeholder text
-        searchField = new JTextField("Search for a Ticket");
+        searchField = new PlaceholderTextField("Search for a Ticket");
+        searchField.setText("Search for a ticket");
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(200, 40));
         searchField.setBorder(BorderFactory.createLineBorder(new Color(60, 165, 92)));
@@ -62,7 +63,6 @@ public class Tickets extends JPanel {
 
         // Create "Add Event" button with icon
         ImageIcon plusIcon = new ImageIcon("C:\\Users\\hp\\Downloads\\Image\\Image\\plus.png"); // Change to your icon file path
-       
         addButton = new JButton("Add a Ticket",plusIcon);
         addButton.setPreferredSize(new Dimension(200, 40));
         addButton.setBackground(new Color(60, 165, 92)); // Set background color
@@ -86,7 +86,6 @@ public class Tickets extends JPanel {
         Object[][] data = getTicketDataFromDatabase();
         tableModel = new DefaultTableModel(data, columns);
         table = new JTable(tableModel);
-
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 14));
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
@@ -172,6 +171,8 @@ public class Tickets extends JPanel {
 
         // Add the buttons panel to the main panel's SOUTH position
         mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
+        add(mainPanel);
+
         setVisible(true);
     }
 
@@ -229,7 +230,7 @@ public class Tickets extends JPanel {
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             // Créer la requête SQL pour récupérer les données des tickets
-        	String query = "SELECT ID, EventID, InviteID, Price, Status FROM billet";
+        	String query = "SELECT * FROM billet";
         	
             // Préparer la déclaration SQL
             try (Statement statement = connection.createStatement();
@@ -295,12 +296,12 @@ public class Tickets extends JPanel {
         gbc.gridx = 0;
         gbc.weightx = 0.2;
         gbc.anchor = GridBagConstraints.WEST;
-        dialog.add(label, gbc);
+        dialog.getContentPane().add(label, gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 0.8;
         gbc.anchor = GridBagConstraints.EAST;
-        dialog.add(textField, gbc);
+        dialog.getContentPane().add(textField, gbc);
     }
 
 
@@ -309,7 +310,7 @@ public class Tickets extends JPanel {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
         JDialog addTicketDialog = new JDialog(parentFrame, "Add Ticket", true);
-        addTicketDialog.setLayout(new GridBagLayout());
+        addTicketDialog.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -324,7 +325,7 @@ public class Tickets extends JPanel {
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
         gbc.anchor = GridBagConstraints.CENTER;
-        addTicketDialog.add(titleLabel, gbc);
+        addTicketDialog.getContentPane().add(titleLabel, gbc);
 
         // Create text fields with the same style as the addition form
         JTextField ticketIdField = new JTextField();
@@ -366,7 +367,7 @@ public class Tickets extends JPanel {
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        addTicketDialog.add(saveButton, gbc);
+        addTicketDialog.getContentPane().add(saveButton, gbc);
 
         // Add action listener to the "Save" button
         saveButton.addActionListener(new ActionListener() {
@@ -391,7 +392,7 @@ public class Tickets extends JPanel {
 
     private void createModifyTicketForm(String ticketId, String eventId, String inviteId, String price, String status) {
         JDialog modifyDialog = new JDialog();
-        modifyDialog.setLayout(new GridBagLayout());
+        modifyDialog.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -406,7 +407,7 @@ public class Tickets extends JPanel {
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
         gbc.anchor = GridBagConstraints.CENTER;
-        modifyDialog.add(titleLabel1, gbc);
+        modifyDialog.getContentPane().add(titleLabel1, gbc);
 
         // Create text fields with the same style as the addition form
         JTextField eventIdField = new JTextField();
@@ -449,7 +450,7 @@ public class Tickets extends JPanel {
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        modifyDialog.add(saveButton, gbc);
+        modifyDialog.getContentPane().add(saveButton, gbc);
 
         // Add action listener to the "Save" button
         saveButton.addActionListener(new ActionListener() {
@@ -555,7 +556,7 @@ public class Tickets extends JPanel {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 Tickets TicketstContentPanel = new Tickets();
-                frame.add(TicketstContentPanel);
+                frame.getContentPane().add(TicketstContentPanel);
 
                 frame.pack();
                 frame.setLocationRelativeTo(null);

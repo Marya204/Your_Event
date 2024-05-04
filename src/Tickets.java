@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+
+import Projet.Event;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -155,7 +158,8 @@ public class Tickets extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               
+            	Window window = SwingUtilities.getWindowAncestor(Tickets.this);
+                window.dispose();
                Dashboard dashboard = new Dashboard();
                 dashboard.setVisible(true);
             }
@@ -204,12 +208,56 @@ public class Tickets extends JPanel {
         }
     }
 
+ // Method to retrieve ticket data from the database
+    private Object[][] getTicketDataFromDatabase() {
+        String url = "jdbc:mysql://localhost:3306/events";
+        String username = "root";
+        String password = "";
+        
+       
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            // Créer la requête SQL pour récupérer les données des tickets
+        	String query = "SELECT * FROM billet ";
+        	  Statement statement = connection.createStatement();
+              ResultSet resultSet = statement.executeQuery(query);
+        	
+
+           
+            // Liste pour stocker les données des tickets
+            List<Object[]> ticketDataList = new ArrayList<>();
+
+                // Parcourir les résultats de la requête
+                while (resultSet.next()) {
+                	 Object[] row = new Object[5];
+                     row[0] = resultSet.getString("Id");
+                     row[0] = resultSet.getString("Eventid");
+                     row[1] = resultSet.getString("Inviteid");
+                     row[2] = resultSet.getString("Price");
+                     row[3] = resultSet.getString("Status");
+                     
+                     ticketDataList.add(row);
+                 }
+                
+           
+        // Conversion de la liste en tableau à deux dimensions
+        Object[][] data = new Object[ticketDataList.size()][];
+        for (int i = 0; i < ticketDataList.size(); i++) {
+            data[i] = ticketDataList.get(i);   
+    }
+        return data;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Object[0][0];
+        }
+    }
+    
+
     private void filterTickets() {
         // Récupérer le texte saisi par l'utilisateur
-        String lieu = searchField.getText().trim().toLowerCase();
+        String Status = searchField.getText().trim().toLowerCase();
 
         // Récupérer les données depuis la base de données en fonction du lieu filtré
-        Object[][] filteredData = getTicketDataFromDatabase();
+        Object[][] filteredData = getTicketDataFromDatabase(Status);
 
         // Utiliser directement la variable de table au niveau de la classe
         DefaultTableModel model = (DefaultTableModel) this.table.getModel();
@@ -219,46 +267,55 @@ public class Tickets extends JPanel {
             model.addRow(row); // Ajouter les lignes filtrées
         }
     }
- // Method to retrieve ticket data from the database
-    private Object[][] getTicketDataFromDatabase() {
+    private Object[][] getTicketDataFromDatabase(String status) {
+        // Connexion à votre base de données et exécution de la requête SQL pour récupérer les données
         String url = "jdbc:mysql://localhost:3306/events";
         String username = "root";
         String password = "";
-        
-        // Liste pour stocker les données des tickets
-        List<Object[]> ticketDataList = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            // Créer la requête SQL pour récupérer les données des tickets
-        	String query = "SELECT * FROM billet";
-        	
-            // Préparer la déclaration SQL
-            try (Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery(query)) {
-                // Parcourir les résultats de la requête
-                while (resultSet.next()) {
-                    // Récupérer les valeurs des colonnes pour chaque ligne
-                	String id = resultSet.getString("ID");
-                    String eventId = resultSet.getString("EventID");
-                    String inviteId = resultSet.getString("InviteID");
-                    String price = resultSet.getString("Price");
-                    String status = resultSet.getString("Status");
-                    // Créer un tableau d'objets contenant les valeurs des colonnes
-
-                    Object[] rowData = {id, eventId, inviteId, price, status};
-                    
-                    // Ajouter le tableau d'objets à la liste
-                    ticketDataList.add(rowData);
-                }
+            String query = "SELECT * FROM billet";
+            
+            // Ajout de la clause WHERE si un statut est spécifié
+            if (status != null && !status.isEmpty()) {
+                query += " WHERE Status LIKE ?";
             }
+            
+            PreparedStatement statement = connection.prepareStatement(query);
+            
+            // Si un statut est spécifié, définissez le paramètre dans la requête
+            if (status != null && !status.isEmpty()) {
+                statement.setString(1, status + "%");
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // Traitement des résultats et création des données filtrées
+            List<Object[]> ticketData = new ArrayList<>();
+            while (resultSet.next()) {
+                Object[] row = new Object[5];
+                row[0] = resultSet.getString("Id");
+                row[1] = resultSet.getString("Eventid");
+                row[2] = resultSet.getString("Inviteid");
+                row[3] = resultSet.getString("Price");
+                row[4] = resultSet.getString("Status"); // Utilisez l'indice 4 pour le statut
+                ticketData.add(row);
+            }
+
+            // Conversion de la liste en tableau à deux dimensions
+            Object[][] data = new Object[ticketData.size()][];
+            for (int i = 0; i < ticketData.size(); i++) {
+                data[i] = ticketData.get(i);
+            }
+
+            return data;
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gérer les erreurs de connexion ou d'exécution de requête
+            return new Object[0][0];
         }
-        
-        // Convertir la liste en un tableau à deux dimensions pour retourner les données des tickets
-        return ticketDataList.toArray(new Object[0][]);
     }
+
+
 
  // Method to add a ticket to the database
     private void addTicketToDatabase(String ticketId, String eventId, String inviteId, String status, String price) {

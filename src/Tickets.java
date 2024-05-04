@@ -230,10 +230,10 @@ public class Tickets extends JPanel {
                 while (resultSet.next()) {
                 	 Object[] row = new Object[5];
                      row[0] = resultSet.getString("Id");
-                     row[0] = resultSet.getString("Eventid");
-                     row[1] = resultSet.getString("Inviteid");
-                     row[2] = resultSet.getString("Price");
-                     row[3] = resultSet.getString("Status");
+                     row[1] = resultSet.getString("Eventid");
+                     row[2] = resultSet.getString("Inviteid");
+                     row[3] = resultSet.getString("Price");
+                     row[4] = resultSet.getString("Status");
                      
                      ticketDataList.add(row);
                  }

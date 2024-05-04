@@ -424,7 +424,7 @@ public class Participant extends JPanel {
         addEventDialog.setFont(new Font("Arial", Font.PLAIN, 18)); // Same font as main panel
 
         // Add the title label
-        JLabel titleLabel = createLabel("Add Event",new Color(60, 165, 92));
+        JLabel titleLabel = createLabel("Add Participant",new Color(60, 165, 92));
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
         gbc.gridx = 0;
         gbc.gridy = 0;

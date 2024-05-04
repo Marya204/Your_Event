@@ -22,7 +22,7 @@ public class PlaceholderTextField extends JTextField implements FocusListener {
         super.paintComponent(g);
         if (showingPlaceholder) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // 0.5f définit la transparence à 50%
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // 1f définit la transparence à 50%
             g2d.setColor(new Color(255, 255, 255, 0));
             g2d.drawString(placeholder, getInsets().left, (getHeight() + getFont().getSize()) / 2);
             g2d.dispose(); // Libère les ressources graphiques

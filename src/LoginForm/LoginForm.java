@@ -18,7 +18,7 @@ public class LoginForm extends JFrame {
         setForeground(new Color(0, 0, 0));
         getContentPane().setForeground(new Color(0, 0, 0));
         getContentPane().setBackground(new Color(0, 102, 51));
-
+        setResizable(false);
         // Création des composants
         emailField = new JTextField(20); // Change variable name
         emailField.setBackground(new Color(235, 219, 204));
@@ -116,7 +116,7 @@ public class LoginForm extends JFrame {
         String dbPassword = "";
 
         try (Connection conn = DriverManager.getConnection(url, user, dbPassword)) {
-            String sql = "SELECT * FROM login WHERE email = ? AND password = ?";
+            String sql = "SELECT * FROM user WHERE email = ? AND password = ?";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, email);
                 statement.setString(2, password); // Ne pas hacher le mot de passe

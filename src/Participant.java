@@ -42,16 +42,14 @@ public class Participant extends JPanel {
         searchPanel.setBackground(new Color(235, 235, 235)); // Set background color
 
         // Create the search field with placeholder text
-        searchField = new JTextField("Search for a participant", 20);
+        searchField = new PlaceholderTextField("Search for a participant");
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(200, 40));
         searchField.setBorder(BorderFactory.createLineBorder(new Color(60, 165, 92))); // Set border color
         searchField.setBackground(Color.WHITE); // Set background color
         searchField.setForeground(Color.BLACK); // Set foreground color
-
-        
-        // Add the search field to the search panel
         searchPanel.add(searchField);
+        
         // Ajouter un écouteur sur le champ de recherche
         searchField.getDocument().addDocumentListener(new DocumentListener() {
         

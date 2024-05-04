@@ -152,8 +152,8 @@ public class Tickets extends JPanel {
         
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(200, 40));
-        backButton.setBackground(new Color(255,255,255)); // Green background
-        backButton.setForeground(new Color(0,0,0)); // White text
+        backButton.setBackground(new Color(60, 165, 92)); // Green background
+        backButton.setForeground(new Color(255,255,255)); // White text
         backButton.setFocusPainted(false); // Remove focus border
         backButton.addActionListener(new ActionListener() {
             @Override

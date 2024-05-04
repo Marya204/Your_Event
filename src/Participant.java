@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.*;
+
+import Projet.Event;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,14 +57,14 @@ public class Participant extends JPanel {
         searchField.getDocument().addDocumentListener(new DocumentListener() {
         
             public void insertUpdate(DocumentEvent e) {
-                filterEvents();
+            	filterParticipants();
             }
 
             public void removeUpdate(DocumentEvent e) {
-                filterEvents();
+            	filterParticipants();
             }
             public void changedUpdate(DocumentEvent e) {
-                filterEvents();
+            	filterParticipants();
             }
         });
         // Add space between components
@@ -155,13 +158,14 @@ public class Participant extends JPanel {
         
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(200, 40));
-        backButton.setBackground(new Color(255,255,255)); // Green background
-        backButton.setForeground(new Color(0,0,0)); // White text
+        backButton.setBackground(new Color(60, 165, 92)); // Green background
+        backButton.setForeground(new Color(255,255,255)); // White text
         backButton.setFocusPainted(false); // Remove focus border
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               
+            	Window window = SwingUtilities.getWindowAncestor(Participant.this);
+                window.dispose();
                Dashboard dashboard = new Dashboard();
                 dashboard.setVisible(true);
             }
@@ -527,7 +531,7 @@ public class Participant extends JPanel {
 
     
 
-    private void filterEvents() {
+    private void filterParticipants() {
         // Récupérer le texte saisi par l'utilisateur
         String Name = searchField.getText().trim().toLowerCase();
 
@@ -542,6 +546,7 @@ public class Participant extends JPanel {
             model.addRow(row); // Ajouter les lignes filtrées
         }
     }
+    
     private Object[][] getparticipantDataFromDatabase(String Name) {
         String url = "jdbc:mysql://localhost:3306/events";
         String username = "root";

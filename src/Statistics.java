@@ -14,13 +14,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 
 
-import javax.swing.*;
-import org.jfree.chart.*;
-import org.jfree.chart.plot.*;
-import org.jfree.data.category.*;
-
 import java.awt.*;
-import java.sql.*;
 
 public class Statistics extends JPanel {
 	
@@ -77,6 +71,7 @@ public class Statistics extends JPanel {
             dataset,
             PlotOrientation.VERTICAL,
             true, true, false);
+        
         return barChart;
     }
 

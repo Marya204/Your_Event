@@ -3,7 +3,7 @@ package Projet;
 
 
 import javax.swing.*;
-
+import java.awt.*;
 
 import java.sql.*;
 import org.jfree.chart.ChartFactory;
@@ -12,9 +12,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-
-
-import java.awt.*;
 
 public class Statistics extends JPanel {
 	
